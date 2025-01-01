@@ -1,0 +1,32 @@
+<div class="jeopardy-container h-screen p-4">
+  <div class="jeopardy-board h-full flex flex-col">
+    <!-- Заголовки категорий -->
+    <div class="category-headers grid grid-cols-5 gap-1 mb-1">
+      @for (category of categories; track category.name) {
+        <div class="category-header bg-blue-900 text-white p-4 flex items-center justify-center font-bold text-center">
+          {{ category.name }}
+        </div>
+      }
+    </div>
+
+    <!-- Сетка вопросов -->
+    <div class="questions-grid flex-grow grid grid-rows-5 gap-1">
+      @for (value of [100, 200, 300, 400, 500]; track value) {
+        <div class="questions-row grid grid-cols-5 gap-1">
+          @for (category of categories; track category.name) {
+            <div
+              class="question-cell bg-blue-900 text-white flex items-center justify-center font-bold text-2xl cursor-pointer transition-colors duration-300 hover:bg-blue-800 h-full w-full"
+              [class.question-cell--answered]="category.questions[value/100 - 1].isAnswered"
+              [class.bg-blue-950]="category.questions[value/100 - 1].isAnswered"
+              [class.cursor-default]="category.questions[value/100 - 1].isAnswered"
+              [class.hover:bg-blue-950]="category.questions[value/100 - 1].isAnswered"
+              (click)="onQuestionClick(category, category.questions[value/100 - 1])"
+            >
+              {{ category.questions[value/100 - 1].isAnswered ? '' : value }}
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
