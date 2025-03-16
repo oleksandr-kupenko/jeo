@@ -1,0 +1,30 @@
+@for (team of teams(); track team.id) {
+  <div class="team bg-white font-bold text-black flex flex-col gap-2 p-2 w-40 rounded">
+    <input
+      class="text-xl border-b-2 border-black block text-center"
+      [(ngModel)]="team.name"
+      (ngModelChange)="handleUpdateTeams()"
+    />
+    <input
+      name="ponts"
+      class="bg-blue-950 text-white w-full font-bold text-2xl text-center"
+      [(ngModel)]="team.points"
+    />
+    <div class="points-buttons flex justify-between gap-5">
+      <button
+        [disabled]="!currentPoints()"
+        class="border-2 w-1/2 text-xl font-bold text-green-600 hover:bg-green-600 disabled:bg-gray-400 disabled:text-gray-600 hover:text-white transition-colors"
+        (click)="handleIncreasePoints(team.id)"
+      >
+        +
+      </button>
+      <button
+        class="border-2 w-1/2 text-xl font-bold text-red-800 hover:bg-red-800 hover:text-white transition-colors disabled:bg-gray-400 disabled:text-gray-600"
+        [disabled]="!currentPoints()"
+        (click)="handleDecreasePoints(team.id)"
+      >
+        -
+      </button>
+    </div>
+  </div>
+}

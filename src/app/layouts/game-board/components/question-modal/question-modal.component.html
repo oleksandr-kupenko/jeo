@@ -1,7 +1,33 @@
-<div class="p-4">
-  <h2 class="text-xl font-bold mb-4">{{ data.question }}</h2>
-  <p class="mb-4">{{ data.answer }}</p>
-  <button
-    class="bg-blue-500 text-white px-4 py-2 rounded"
-    (click)="dialogRef.close()">Close</button>
+<div class="h-16 p-4 w-full flex justify-between bg-blue-950 text-white">
+  <div class="flex gap-3 items-center">
+    <span>Continue</span>
+    <button class="kdb" (click)="handleClose()">
+      ESC
+    </button>
+  </div>
+
+
+  <div class="flex gap-3 items-center">
+    <span class="font-bold">{{data.category}} for {{data.question.value}}</span>
+  </div>
+
+  <div class="flex gap-3 items-center">
+    <span>Reveal Correct Response</span>
+    <button class="kdb" (click)="handleShowAnswer()">
+      Spacebar
+    </button>
+  </div>
 </div>
+
+<div class="public-modal w-full overflow-auto h-[calc(100%-8rem)]">
+  <div class="p-4 h-full flex flex-col items-center justify-center text-white">
+    <div class="question" [@slideUpQuestion]="isShowAnswer() ? 'shown' : 'void'" [innerHTML]="safeQuestion()">
+    </div>
+    @if(isShowAnswer()) {
+      <div class="answer text-center" [@fadeInAnswer] [innerHTML]="safeAnswer()">
+      </div>
+    }
+  </div>
+
+</div>
+

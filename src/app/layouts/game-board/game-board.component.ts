@@ -1,193 +1,87 @@
-import { Component } from '@angular/core';
+import {Component, input, OnInit, signal} from '@angular/core';
 import { Category, Question } from './interfaces/game-board.interfaces';
+import { QuestionModalComponent } from './components/question-modal/question-modal.component';
+import { Dialog } from '@angular/cdk/dialog';
+import { GameBoardService } from './game-board.service';
+import { TeamsComponent } from './components/teams/teams.component';
+import { EditorModalComponent } from './components/editor-modal/editor-modal.component';
+import {CurrentQuestionService} from "../../services/current-question.service";
+import { CommonModule } from '@angular/common';
+import { EditableCategoryComponent } from '../../components/editable-category/editable-category.component';
 
 @Component({
   selector: 'app-game-board',
   standalone: true,
-  imports: [],
+  imports: [
+    CommonModule, 
+    EditableCategoryComponent,
+    TeamsComponent
+  ],
   templateUrl: './game-board.component.html',
   styleUrl: './game-board.component.scss',
 })
-export class GameBoardComponent {
-  categories: Category[] = [
-    {
-      name: 'jQuery',
-      questions: [
-        {
-          value: 100,
-          question: 'Question 1',
-          answer: 'Answer 1',
-          isAnswered: false,
-        },
-        {
-          value: 200,
-          question: 'Question 2',
-          answer: 'Answer 2',
-          isAnswered: false,
-        },
-        {
-          value: 300,
-          question: 'Question 3',
-          answer: 'Answer 3',
-          isAnswered: false,
-        },
-        {
-          value: 400,
-          question: 'Question 4',
-          answer: 'Answer 4',
-          isAnswered: false,
-        },
-        {
-          value: 500,
-          question: 'Question 5',
-          answer: 'Answer 5',
-          isAnswered: false,
-        },
-      ],
-    },
-    {
-      name: 'HTML',
-      questions: [
-        {
-          value: 100,
-          question: 'Question 1',
-          answer: 'Answer 1',
-          isAnswered: false,
-        },
-        {
-          value: 200,
-          question: 'Question 2',
-          answer: 'Answer 2',
-          isAnswered: false,
-        },
-        {
-          value: 300,
-          question: 'Question 3',
-          answer: 'Answer 3',
-          isAnswered: false,
-        },
-        {
-          value: 400,
-          question: 'Question 4',
-          answer: 'Answer 4',
-          isAnswered: false,
-        },
-        {
-          value: 500,
-          question: 'Question 5',
-          answer: 'Answer 5',
-          isAnswered: false,
-        },
-      ],
-    },
-    {
-      name: 'JavaScript',
-      questions: [
-        {
-          value: 100,
-          question: 'Question 1',
-          answer: 'Answer 1',
-          isAnswered: false,
-        },
-        {
-          value: 200,
-          question: 'Question 2',
-          answer: 'Answer 2',
-          isAnswered: false,
-        },
-        {
-          value: 300,
-          question: 'Question 3',
-          answer: 'Answer 3',
-          isAnswered: false,
-        },
-        {
-          value: 400,
-          question: 'Question 4',
-          answer: 'Answer 4',
-          isAnswered: false,
-        },
-        {
-          value: 500,
-          question: 'Question 5',
-          answer: 'Answer 5',
-          isAnswered: false,
-        },
-      ],
-    },
-    {
-      name: 'Python',
-      questions: [
-        {
-          value: 100,
-          question: 'Question 1',
-          answer: 'Answer 1',
-          isAnswered: false,
-        },
-        {
-          value: 200,
-          question: 'Question 2',
-          answer: 'Answer 2',
-          isAnswered: false,
-        },
-        {
-          value: 300,
-          question: 'Question 3',
-          answer: 'Answer 3',
-          isAnswered: false,
-        },
-        {
-          value: 400,
-          question: 'Question 4',
-          answer: 'Answer 4',
-          isAnswered: false,
-        },
-        {
-          value: 500,
-          question: 'Question 5',
-          answer: 'Answer 5',
-          isAnswered: false,
-        },
-      ],
-    },
-    {
-      name: 'Ruby',
-      questions: [
-        {
-          value: 100,
-          question: 'Question 1',
-          answer: 'Answer 1',
-          isAnswered: false,
-        },
-        {
-          value: 200,
-          question: 'Question 2',
-          answer: 'Answer 2',
-          isAnswered: false,
-        },
-        {
-          value: 300,
-          question: 'Question 3',
-          answer: 'Answer 3',
-          isAnswered: false,
-        },
-        {
-          value: 400,
-          question: 'Question 4',
-          answer: 'Answer 4',
-          isAnswered: false,
-        },
-        {
-          value: 500,
-          question: 'Question 5',
-          answer: 'Answer 5',
-          isAnswered: false,
-        },
-      ],
-    },
-  ];
+export class GameBoardComponent implements OnInit {
+  public categories = signal<Category[]>([]);
+
+  public isEditMode = input<boolean>(false);
+
+  constructor(
+    private dialog: Dialog,
+    private gameBoardService: GameBoardService,
+    private currentQuestionService: CurrentQuestionService
+  ) {}
+
+  ngOnInit() {
+    this.gameBoardService
+      .getCategories()
+      .subscribe((data) => this.categories.set(data));
+  }
 
   onQuestionClick(category: Category, question: Question) {
-    question.isAnswered = true;
+    if (this.isEditMode()) {
+      this.openQuestionEditor(category, question);
+    } else {
+      this.openQuestion(category, question);
+    }
+  }
+
+  private openQuestion(category: Category, question: Question) {
+    const dialogRef = this.dialog.open(QuestionModalComponent, {
+      width: '100vw',
+      height: '100vh',
+      data: {
+        category: category.name,
+        question: question,
+      },
+    });
+
+    dialogRef.closed.subscribe(() => {
+      question.isAnswered = true;
+      this.gameBoardService.updateQuestionStatus(category.id, question.id);
+      this.currentQuestionService.setCurrentQuestionPoints(null);
+    });
+  }
+
+  private openQuestionEditor(category: Category, question: Question) {
+    const dialogRef = this.dialog.open(EditorModalComponent, {
+      width: '1000px',
+      height: '450px',
+      maxWidth: '90%',
+      maxHeight: '90%',
+      data: {
+        category: category.name,
+        question: question,
+        categoryId: category.id
+      },
+    });
+  }
+
+  updateCategoryName(index: number, newName: string): void {
+    const updatedCategories = [...this.categories()];
+    updatedCategories[index].name = newName;
+    this.categories.set(updatedCategories);
+    
+    // Если нужно сохранить изменения на сервере
+    this.gameBoardService.updateCategoryName(updatedCategories[index].id, newName);
   }
 }
