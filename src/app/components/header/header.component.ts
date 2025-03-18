@@ -16,9 +16,6 @@ import { BackdropDirective } from '../../core/directives/backdrop.directive';
     CommonModule, 
     RouterModule, 
     BackdropDirective,
-    HlmTooltipTriggerDirective,
-    HlmTooltipComponent,
-    BrnTooltipContentDirective,
     NgIcon
   ],
   providers: [

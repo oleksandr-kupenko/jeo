@@ -1,8 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{html,ts}"],
+  presets: [require('@spartan-ng/brain/hlm-tailwind-preset')],
+  content: [
+    './src/**/*.{html,ts}',
+    './libs/**/*.{html,ts}',
+    './node_modules/@spartan-ng/**/*.{html,ts,js,mjs}',
+  ],
   theme: {
-    extend: {}
+    extend: {},
   },
-  plugins: []
+  plugins: [],
 };
