@@ -1,18 +1,11 @@
-<div class="jeopardy-container h-screen p-4">
+<div class="jeopardy-container h-full p-4">
   <div class="jeopardy-board h-full flex flex-col">
     <div class="categories-row grid grid-cols-5 gap-1 mb-1">
       @for (category of categories(); track $index) {
         <div class="category-cell bg-blue-900 text-white p-4">
-          @if (isEditMode()) {
-            <app-editable-category 
-              [categoryName]="category.name" 
-              (categoryNameChange)="updateCategoryName($index, $event)"
-            />
-          } @else {
-            <div class="category-header flex items-center justify-center font-bold text-center">
-              {{ category.name }}
-            </div>
-          }
+          <div class="category-header flex items-center justify-center font-bold text-center">
+            {{ category.name }}
+          </div>
         </div>
       }
     </div>
@@ -34,6 +27,4 @@
     </div>
   </div>
 </div>
-@if (!isEditMode()) {
-  <app-teams></app-teams>
-}
+<app-teams></app-teams>

@@ -1,20 +1,17 @@
-import {Component, input, OnInit, signal} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import { Category, Question } from './interfaces/game-board.interfaces';
 import { QuestionModalComponent } from './components/question-modal/question-modal.component';
 import { Dialog } from '@angular/cdk/dialog';
 import { GameBoardService } from './game-board.service';
 import { TeamsComponent } from './components/teams/teams.component';
-import { EditorModalComponent } from './components/editor-modal/editor-modal.component';
 import {CurrentQuestionService} from "../../services/current-question.service";
 import { CommonModule } from '@angular/common';
-import { EditableCategoryComponent } from '../../components/editable-category/editable-category.component';
 
 @Component({
   selector: 'app-game-board',
   standalone: true,
   imports: [
     CommonModule, 
-    EditableCategoryComponent,
     TeamsComponent
   ],
   templateUrl: './game-board.component.html',
@@ -22,8 +19,6 @@ import { EditableCategoryComponent } from '../../components/editable-category/ed
 })
 export class GameBoardComponent implements OnInit {
   public categories = signal<Category[]>([]);
-
-  public isEditMode = input<boolean>(false);
 
   constructor(
     private dialog: Dialog,
@@ -38,11 +33,7 @@ export class GameBoardComponent implements OnInit {
   }
 
   onQuestionClick(category: Category, question: Question) {
-    if (this.isEditMode()) {
-      this.openQuestionEditor(category, question);
-    } else {
-      this.openQuestion(category, question);
-    }
+    this.openQuestion(category, question);
   }
 
   private openQuestion(category: Category, question: Question) {
@@ -60,28 +51,5 @@ export class GameBoardComponent implements OnInit {
       this.gameBoardService.updateQuestionStatus(category.id, question.id);
       this.currentQuestionService.setCurrentQuestionPoints(null);
     });
-  }
-
-  private openQuestionEditor(category: Category, question: Question) {
-    const dialogRef = this.dialog.open(EditorModalComponent, {
-      width: '1000px',
-      height: '450px',
-      maxWidth: '90%',
-      maxHeight: '90%',
-      data: {
-        category: category.name,
-        question: question,
-        categoryId: category.id
-      },
-    });
-  }
-
-  updateCategoryName(index: number, newName: string): void {
-    const updatedCategories = [...this.categories()];
-    updatedCategories[index].name = newName;
-    this.categories.set(updatedCategories);
-    
-    // Если нужно сохранить изменения на сервере
-    this.gameBoardService.updateCategoryName(updatedCategories[index].id, newName);
   }
 }

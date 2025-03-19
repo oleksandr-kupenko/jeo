@@ -1,1 +1,30 @@
-<app-game-board [isEditMode]="true"></app-game-board>
+<div class="jeopardy-container h-full p-4">
+  <div class="jeopardy-board h-full flex flex-col">
+    <div class="categories-row grid grid-cols-5 gap-1 mb-1">
+      @for (category of categories(); track $index) {
+        <div class="category-cell bg-blue-900 text-white p-4">
+          <app-editable-category 
+            [categoryName]="category.name" 
+            (categoryNameChange)="updateCategoryName($index, $event)"
+          />
+        </div>
+      }
+    </div>
+
+    <div class="questions-grid flex-grow grid grid-rows-5">
+      @for (value of [100, 200, 300, 400, 500]; track value) {
+        <div class="questions-row grid grid-cols-5">
+          @for (category of categories(); track category.name) {
+            <div
+              class="question-cell editor-cell"
+              [class.answered]="category.questions[value/100 - 1].isAnswered"
+              (click)="onQuestionClick(category, category.questions[value/100 - 1])"
+            >
+              {{ category.questions[value/100 - 1].value }}
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
