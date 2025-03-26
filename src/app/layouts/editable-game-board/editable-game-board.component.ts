@@ -1,5 +1,5 @@
 import {Component, computed, inject, OnInit, signal, Type} from '@angular/core';
-import {Category, Game, Question} from '../game-board/interfaces/game-board.interfaces';
+import {Category, Game, Question, QuestionRow} from '../game-board/interfaces/game-board.interfaces';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {Dialog} from '@angular/cdk/dialog';
@@ -9,10 +9,6 @@ import {EditableCategoryComponent} from '../../components/editable-category/edit
 import {MediaPreviewPipe} from './media-preview.pipe';
 import {TruncateTextPipe} from './truncate-text.pipe';
 import {ActivatedRoute} from '@angular/router';
-
-interface QuestionRow {
-  value: number;
-}
 
 @Component({
   selector: 'app-editable-game-board',
@@ -49,6 +45,13 @@ export class EditableGameBoardComponent implements OnInit {
     // this.gameBoardService
     //   .getCategories()
     //   .subscribe((data) => this.categories.set(data));
+  }
+
+  public getQuestionForCategoryAndValue(category: Category, value: number): Question | undefined {
+    const row = this.questionValues().find(r => r.value === value);
+    if (!row) return undefined;
+    
+    return row.questions.find(q => q.categoryId === category.id);
   }
 
   onQuestionClick(category: Category, question: Question) {
