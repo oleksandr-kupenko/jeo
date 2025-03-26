@@ -1,36 +1,47 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { questionsMock } from './mock/questions.mock';
-import { Category, Team } from './interfaces/game-board.interfaces';
-import { teamsMock } from './mock/teams.mock';
+import {inject, Injectable} from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Category, Game} from './interfaces/game-board.interfaces';
+import {environment} from '../../../environments/environment.development';
+import {HttpClient} from '@angular/common/http';
 
 const STORAGE_KEYS = {
   CATEGORIES: 'game_categories',
   TEAMS: 'game_teams'
 };
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class GameBoardService {
+  private http = inject(HttpClient);
+  private baseUrl = environment.apiUrl;
+
   private categories$$ = new BehaviorSubject<Category[]>([]);
-  private teams$$ = new BehaviorSubject<Team[]>([]);
+  private teams$$ = new BehaviorSubject<[]>([]);
 
   constructor() {
     this.initializeFromStorage();
+  }
+
+  public createGame(title: string): Observable<Game> {
+    return this.http.post<Game>(`${this.baseUrl}/api/games`, {title});
+  }
+
+  public getGame(id: string): Observable<Game> {
+    return this.http.get<Game>(`${this.baseUrl}/api/games/${id}`);
   }
 
   private initializeFromStorage(): void {
     const storedCategories = localStorage.getItem(STORAGE_KEYS.CATEGORIES);
     const storedTeams = localStorage.getItem(STORAGE_KEYS.TEAMS);
 
-    this.categories$$.next(storedCategories ? JSON.parse(storedCategories) : questionsMock);
-    this.teams$$.next(storedTeams ? JSON.parse(storedTeams) : teamsMock);
+    this.categories$$.next(storedCategories ? JSON.parse(storedCategories) : []);
+    this.teams$$.next(storedTeams ? JSON.parse(storedTeams) : []);
   }
 
   private saveCategoriesToStorage(categories: Category[]): void {
     localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(categories));
   }
 
-  private saveTeamsToStorage(teams: Team[]): void {
+  private saveTeamsToStorage(teams: []): void {
     localStorage.setItem(STORAGE_KEYS.TEAMS, JSON.stringify(teams));
   }
 
@@ -48,7 +59,7 @@ export class GameBoardService {
       }
       return category;
     });
-    
+
     this.categories$$.next(updatedCategories);
     this.saveCategoriesToStorage(updatedCategories);
   }
@@ -62,8 +73,8 @@ export class GameBoardService {
             if (q.id === questionId) {
               return {
                 ...q,
-                ...(question && { question }),
-                ...(answer && { answer })
+                question: question !== null ? question : '',
+                answer: answer !== null ? answer : ''
               };
             }
             return q;
@@ -73,7 +84,7 @@ export class GameBoardService {
 
       return category;
     });
-    console.log('111', updatedCategories);
+
     this.categories$$.next(updatedCategories);
     this.saveCategoriesToStorage(updatedCategories);
   }
@@ -105,7 +116,7 @@ export class GameBoardService {
     return this.teams$$.asObservable();
   }
 
-  updateTeams(teams: Team[]) {
+  updateTeams(teams: []) {
     this.teams$$.next(teams);
     console.log('teams', teams);
     this.saveTeamsToStorage(teams);
@@ -115,7 +126,7 @@ export class GameBoardService {
   resetGame(): void {
     localStorage.removeItem(STORAGE_KEYS.CATEGORIES);
     localStorage.removeItem(STORAGE_KEYS.TEAMS);
-    this.categories$$.next(questionsMock);
-    this.teams$$.next(teamsMock);
+    this.categories$$.next([]);
+    this.teams$$.next([]);
   }
 }

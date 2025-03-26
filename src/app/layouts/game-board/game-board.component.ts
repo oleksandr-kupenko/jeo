@@ -1,21 +1,18 @@
 import {Component, OnInit, signal} from '@angular/core';
-import { Category, Question } from './interfaces/game-board.interfaces';
-import { QuestionModalComponent } from './components/question-modal/question-modal.component';
-import { Dialog } from '@angular/cdk/dialog';
-import { GameBoardService } from './game-board.service';
-import { TeamsComponent } from './components/teams/teams.component';
-import {CurrentQuestionService} from "../../services/current-question.service";
-import { CommonModule } from '@angular/common';
+import {Category, Question} from './interfaces/game-board.interfaces';
+import {QuestionModalComponent} from './components/question-modal/question-modal.component';
+import {Dialog} from '@angular/cdk/dialog';
+import {GameBoardService} from './game-board.service';
+import {TeamsComponent} from './components/teams/teams.component';
+import {CurrentQuestionService} from '../../services/current-question.service';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-game-board',
   standalone: true,
-  imports: [
-    CommonModule, 
-    TeamsComponent
-  ],
+  imports: [CommonModule, TeamsComponent],
   templateUrl: './game-board.component.html',
-  styleUrl: './game-board.component.scss',
+  styleUrl: './game-board.component.scss'
 })
 export class GameBoardComponent implements OnInit {
   public categories = signal<Category[]>([]);
@@ -27,9 +24,7 @@ export class GameBoardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.gameBoardService
-      .getCategories()
-      .subscribe((data) => this.categories.set(data));
+    this.gameBoardService.getCategories().subscribe(data => this.categories.set(data));
   }
 
   onQuestionClick(category: Category, question: Question) {
@@ -42,12 +37,13 @@ export class GameBoardComponent implements OnInit {
       height: '100vh',
       data: {
         category: category.name,
-        question: question,
-      },
+        question: question
+      }
     });
 
     dialogRef.closed.subscribe(() => {
-      question.isAnswered = true;
+      //question.isAnswered = true;
+      alert('need to update question status');
       this.gameBoardService.updateQuestionStatus(category.id, question.id);
       this.currentQuestionService.setCurrentQuestionPoints(null);
     });

@@ -3,8 +3,8 @@
     <div class="categories-row grid grid-cols-5 gap-1 mb-1">
       @for (category of categories(); track $index) {
         <div class="category-cell bg-blue-900 text-white p-4">
-          <app-editable-category 
-            [categoryName]="category.name" 
+          <app-editable-category
+            [categoryName]="category.name"
             (categoryNameChange)="updateCategoryName($index, $event)"
           />
         </div>
@@ -14,13 +14,24 @@
     <div class="questions-grid flex-grow grid grid-rows-5">
       @for (value of [100, 200, 300, 400, 500]; track value) {
         <div class="questions-row grid grid-cols-5">
-          @for (category of categories(); track category.name) {
+          @for (category of categories(); track category.name; let i = $index) {
             <div
               class="question-cell editor-cell"
-              [class.answered]="category.questions[value/100 - 1].isAnswered"
-              (click)="onQuestionClick(category, category.questions[value/100 - 1])"
+              [class.empty-cell]="
+                !category.questions[value / 100 - 1].question || !category.questions[value / 100 - 1].answer
+              "
+              (click)="onQuestionClick(category, category.questions[value / 100 - 1])"
             >
-              {{ category.questions[value/100 - 1].value }}
+              <div class="cell-value">{{ questionValues()[i].value}}</div>
+              <div class="cell-content">
+                <div class="question-preview">
+                  {{ category.questions[value / 100 - 1].question | mediaPreview | truncateText: 50 }}
+                </div>
+                <div class="divider"></div>
+                <div class="answer-preview">
+                  {{ category.questions[value / 100 - 1].answer | mediaPreview | truncateText: 50 }}
+                </div>
+              </div>
             </div>
           }
         </div>

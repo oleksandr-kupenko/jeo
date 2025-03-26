@@ -53,7 +53,8 @@ export class QuestionModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.currentQuestionService.setCurrentQuestionPoints(this.data.question.value);
+    //this.currentQuestionService.setCurrentQuestionPoints(this.data.question.value);
+    this.currentQuestionService.setCurrentQuestionPoints(0);
     this.question.set(this.data.question.question);
     this.answer.set(this.data.question.answer);
   }

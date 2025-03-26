@@ -22,6 +22,9 @@
       "dom"
     ],
     "paths": {
+      "@auth": [
+        "./src/app/auth/*"
+      ],
       "@spartan-ng/ui-tooltip-helm": [
         "./libs/ui/ui-tooltip-helm/src/index.ts"
       ],
@@ -42,7 +45,8 @@
       ],
       "@spartan-ng/ui-checkbox-helm": [
         "./libs/ui/ui-checkbox-helm/src/index.ts"
-      ]
+      ],
+
     }
   },
   "angularCompilerOptions": {

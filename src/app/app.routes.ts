@@ -5,9 +5,9 @@ import {GamesListComponent} from './layouts/games-list/games-list.component';
 import {authGuard} from './core/guards/auth.guard';
 import {AuthComponent} from './auth/auth.component';
 import {authRoutes} from './auth/auth.routes';
-import { GameChoiceComponent } from './layouts/game-choice/game-choice.component';
-import { NewGameComponent } from './layouts/new-game/new-game.component';
-import { AutomaticallyGeneratedGameComponent } from './layouts/automatically-generated-game/automatically-generated-game.component';
+import {GameChoiceComponent} from './layouts/game-choice/game-choice.component';
+import {NewGameComponent} from './layouts/new-game/new-game.component';
+import {AutomaticallyGeneratedGameComponent} from './layouts/automatically-generated-game/automatically-generated-game.component';
 
 export const routes: Routes = [
   {
@@ -31,7 +31,7 @@ export const routes: Routes = [
         component: NewGameComponent
       },
       {
-        path: 'games/new/manually',
+        path: 'games/new/manually/:id',
         component: EditableGameBoardComponent
       },
       {
@@ -45,7 +45,7 @@ export const routes: Routes = [
       {
         path: 'game/:id',
         component: GameBoardComponent
-      },
+      }
     ]
-  },
+  }
 ];

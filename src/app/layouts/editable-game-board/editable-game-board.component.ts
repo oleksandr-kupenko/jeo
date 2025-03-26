@@ -1,35 +1,54 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { Category, Question } from '../game-board/interfaces/game-board.interfaces';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Dialog } from '@angular/cdk/dialog';
-import { GameBoardService } from '../game-board/game-board.service';
-import { EditorModalComponent } from '../game-board/components/editor-modal/editor-modal.component';
-import { EditableCategoryComponent } from '../../components/editable-category/editable-category.component';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
+import {Category, Game, Question} from '../game-board/interfaces/game-board.interfaces';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {Dialog} from '@angular/cdk/dialog';
+import {GameBoardService} from '../game-board/game-board.service';
+import {EditorModalComponent} from '../game-board/components/editor-modal/editor-modal.component';
+import {EditableCategoryComponent} from '../../components/editable-category/editable-category.component';
+import {MediaPreviewPipe} from './media-preview.pipe';
+import {TruncateTextPipe} from './truncate-text.pipe';
+import {ActivatedRoute} from '@angular/router';
+
+interface QuestionRow {
+  value: number;
+}
 
 @Component({
   selector: 'app-editable-game-board',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    EditableCategoryComponent
-  ],
+  imports: [CommonModule, FormsModule, EditableCategoryComponent, MediaPreviewPipe, TruncateTextPipe],
   templateUrl: './editable-game-board.component.html',
   styleUrl: './editable-game-board.component.scss'
 })
 export class EditableGameBoardComponent implements OnInit {
-  public categories = signal<Category[]>([]);
-
-  constructor(
-    private dialog: Dialog,
-    private gameBoardService: GameBoardService
-  ) {}
+  private dialog = inject(Dialog);
+  private gameBoardService = inject(GameBoardService);
+  private route = inject(ActivatedRoute);
+  
+  public game = signal<Game | null>(null);
+  public categories = computed<Category[]>(() => this.game()?.categories ?? []);
+  public questionValues = computed<QuestionRow[]>(() => this.game()?.questionRows ?? []);
+  private routeId!: string | null;
 
   ngOnInit() {
-    this.gameBoardService
-      .getCategories()
-      .subscribe((data) => this.categories.set(data));
+    this.routeId = this.route.snapshot.paramMap.get('id');
+
+    if (this.routeId === 'new') {
+      this.gameBoardService.createGame('TEST').subscribe(data => {
+        console.log('data', data);
+        this.game.set(data);
+      });
+    } else {
+      this.gameBoardService.getGame(this.routeId!).subscribe(data => {
+        console.log('data', data);
+        this.game.set(data);
+      });
+    }
+
+    // this.gameBoardService
+    //   .getCategories()
+    //   .subscribe((data) => this.categories.set(data));
   }
 
   onQuestionClick(category: Category, question: Question) {
@@ -46,15 +65,15 @@ export class EditableGameBoardComponent implements OnInit {
         category: category.name,
         question: question,
         categoryId: category.id
-      },
+      }
     });
   }
 
   updateCategoryName(index: number, newName: string): void {
     const updatedCategories = [...this.categories()];
     updatedCategories[index].name = newName;
-    this.categories.set(updatedCategories);
-    
+    //this.categories.set(updatedCategories);
+
     this.gameBoardService.updateCategoryName(updatedCategories[index].id, newName);
   }
 }

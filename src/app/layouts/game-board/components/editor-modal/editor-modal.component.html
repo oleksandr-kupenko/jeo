@@ -1,24 +1,29 @@
 <div class="w-full h-full bg-gray-200 flex flex-col rounded">
   <div class="h-10 bg-gray-400 w-full flex items-center justify-between text-white p-5 text-lg rounded-t">
-    <span>{{ data.category}} for {{data.question.value}}</span>
+    <span>{{ data.category }} for {{ "data.question.value" }}</span>
     <span class="italic">Close without Saving [ESC]</span>
   </div>
 
   <div class="p-5 flex gap-10 h-full">
-    <div class="w-1/2 flex flex-col ">
+    <div class="w-1/2 flex flex-col">
       <h3 class="text-lg mb-3">Question Prompt</h3>
       <div class="w-full h-[285px]">
-        <quill-editor class="w-full h-full"
-                      [(ngModel)]="question" (onContentChanged)="handleUpdateData($event, 'question')"></quill-editor>
+        <quill-editor
+          class="w-full h-full"
+          [(ngModel)]="question"
+          (onContentChanged)="handleUpdateData($event, 'question')"
+        ></quill-editor>
       </div>
     </div>
 
     <div class="w-1/2 flex flex-col h-full">
       <h3 class="text-lg mb-3">Correct Response</h3>
       <div class="w-full h-[285px]">
-        <quill-editor class="w-full h-full"
-                      [(ngModel)]="answer"
-                      (onContentChanged)="handleUpdateData($event, 'answer')"></quill-editor>
+        <quill-editor
+          class="w-full h-full"
+          [(ngModel)]="answer"
+          (onContentChanged)="handleUpdateData($event, 'answer')"
+        ></quill-editor>
       </div>
     </div>
   </div>

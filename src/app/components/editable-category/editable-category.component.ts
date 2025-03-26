@@ -61,19 +61,19 @@ import { FormsModule } from '@angular/forms';
   `
 })
 export class EditableCategoryComponent {
-  categoryName = input<string>('');
-  categoryNameChange = output<string>();
-  isEditing = signal<boolean>(false);
+  public categoryName = input<string>('');
+  public categoryNameChange = output<string>();
+  public isEditing = signal<boolean>(false);
   
-  startEditing(): void {
+  public startEditing(): void {
     this.isEditing.set(true);
   }
   
-  finishEditing(): void {
+  public finishEditing(): void {
     this.isEditing.set(false);
   }
   
-  updateCategoryName(newValue: string): void {
+  public updateCategoryName(newValue: string): void {
     this.categoryNameChange.emit(newValue);
   }
 } 

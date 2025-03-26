@@ -16,10 +16,10 @@
           @for (category of categories(); track category.name) {
             <div
               class="question-cell"
-              [class.answered]="category.questions[value/100 - 1].isAnswered"
-              (click)="onQuestionClick(category, category.questions[value/100 - 1])"
+              [class.answered]="false"
+              (click)="onQuestionClick(category, category.questions[value / 100 - 1])"
             >
-              {{ category.questions[value/100 - 1].value }}
+              {{ "category.questions[value/100 - 1].value" }}
             </div>
           }
         </div>

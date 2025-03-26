@@ -42,7 +42,6 @@ export class EditorModalComponent implements OnInit {
 
   public handleSave() {
     this.gameBoardService.updateQuestion(this.data.categoryId, this.data.question.id, this.question, this.answer);
-    console.log(this.question, this.answer);
     this.dialogRef.close();
   }
 }
