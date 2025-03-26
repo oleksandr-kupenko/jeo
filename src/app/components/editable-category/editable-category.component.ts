@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-editable-category',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   template: `
     <div 
       class="category-header" 

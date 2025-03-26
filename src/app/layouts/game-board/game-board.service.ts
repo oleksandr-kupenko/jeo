@@ -1,6 +1,6 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, resource} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Category, Game} from './interfaces/game-board.interfaces';
+import {Category, Game, Question, QuestionUpdate} from './interfaces/game-board.interfaces';
 import {environment} from '../../../environments/environment.development';
 import {HttpClient} from '@angular/common/http';
 
@@ -64,30 +64,63 @@ export class GameBoardService {
     this.saveCategoriesToStorage(updatedCategories);
   }
 
-  updateQuestion(categoryId: string, questionId: string, question: string | null, answer: string | null) {
-    const updatedCategories = this.categories$$.getValue().map(category => {
-      if (category.id === categoryId) {
-        return {
-          ...category,
-          questions: category.questions.map(q => {
-            if (q.id === questionId) {
-              return {
-                ...q,
-                question: question !== null ? question : '',
-                answer: answer !== null ? answer : ''
-              };
-            }
-            return q;
-          })
-        };
-      }
+  updateQuestion(data: QuestionUpdate): Observable<Question> {
+    const postData = {
+      question: data.question,
+      answer: data.answer,
+      categoryId: data.categoryId,
+      rowId: data.rowId
+    };
 
-      return category;
-    });
+    return this.http.patch<Question>(`${this.baseUrl}/api/questions/${data.questionId}`, postData);
 
-    this.categories$$.next(updatedCategories);
-    this.saveCategoriesToStorage(updatedCategories);
+    // const updatedCategories = this.categories$$.getValue().map(category => {
+    //   if (category.id === categoryId) {
+    //     return {
+    //       ...category,
+    //       questions: category.questions.map(q => {
+    //         if (q.id === questionId) {
+    //           return {
+    //             ...q,
+    //             question: question !== null ? question : '',
+    //             answer: answer !== null ? answer : ''
+    //           };
+    //         }
+    //         return q;
+    //       })
+    //     };
+    //   }
+
+    //   return category;
+    // });
+
+    // this.categories$$.next(updatedCategories);
+    // this.saveCategoriesToStorage(updatedCategories);
   }
+
+  getAllGames() {
+    return this.http.get<Game[]>(`${this.baseUrl}/api/games`);
+  }
+
+  deleteGame(gameId: string) {
+    return this.http.delete<Game>(`${this.baseUrl}/api/games/${gameId}`);
+  }
+
+  // TODO: fix this
+  // gamesResource = resource({
+  //   loader: async () => {
+  //     const response = await fetch(`${this.baseUrl}/api/games`);
+  //     if (response.ok) {
+  //       return response.json();
+  //     }
+  //     console.error('Error fetching games', response);
+  //     return [];
+  //   }
+  // });
+
+  // reloadGames() {
+  //   this.gamesResource.reload();
+  // }
 
   updateQuestionStatus(categoryId: string, questionId: string) {
     const updatedCategories = this.categories$$.getValue().map(category => {

@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, OnInit, signal, Type} from '@angular/core';
 import {Category, Game, Question} from '../game-board/interfaces/game-board.interfaces';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -17,7 +17,7 @@ interface QuestionRow {
 @Component({
   selector: 'app-editable-game-board',
   standalone: true,
-  imports: [CommonModule, FormsModule, EditableCategoryComponent, MediaPreviewPipe, TruncateTextPipe],
+  imports: [ FormsModule, EditableCategoryComponent, MediaPreviewPipe, TruncateTextPipe],
   templateUrl: './editable-game-board.component.html',
   styleUrl: './editable-game-board.component.scss'
 })

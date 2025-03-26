@@ -1,6 +1,6 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, inject} from '@angular/core';
 import {DIALOG_DATA, DialogRef} from '@angular/cdk/dialog';
-import {Question} from '../../interfaces/game-board.interfaces';
+import {Question, QuestionUpdate} from '../../interfaces/game-board.interfaces';
 import {FormsModule} from '@angular/forms';
 import {ContentChange, QuillEditorComponent, QuillModules} from 'ngx-quill';
 import hljs from 'highlight.js';
@@ -8,18 +8,22 @@ import {GameBoardService} from '../../game-board.service';
 
 @Component({
   selector: 'app-editor-modal',
-  imports: [FormsModule, QuillEditorComponent],
+  imports: [
+    FormsModule,
+    QuillEditorComponent
+  ],
   templateUrl: './editor-modal.component.html',
   styleUrl: './editor-modal.component.scss'
 })
 export class EditorModalComponent implements OnInit {
+  private readonly dialogRef = inject(DialogRef<Question>);
+  private readonly gameBoardService = inject(GameBoardService);
+  
   public question = '';
   public answer = '';
 
   constructor(
-    public dialogRef: DialogRef<string>,
-    @Inject(DIALOG_DATA) public data: {question: Question; category: string; categoryId: string},
-    private gameBoardService: GameBoardService
+    @Inject(DIALOG_DATA) public data: {question: Question; category: string; categoryId: string}
   ) {
     if (typeof hljs !== 'undefined') {
       // @ts-ignore
@@ -41,7 +45,16 @@ export class EditorModalComponent implements OnInit {
   }
 
   public handleSave() {
-    this.gameBoardService.updateQuestion(this.data.categoryId, this.data.question.id, this.question, this.answer);
-    this.dialogRef.close();
+    const questionUpdate: QuestionUpdate = {
+      questionId: this.data.question.id,
+      question: this.question,
+      answer: this.answer,
+      categoryId: this.data.categoryId,
+      rowId: this.data.question.rowId
+    }
+
+    this.gameBoardService.updateQuestion(questionUpdate).subscribe(newQuestion => {
+      this.dialogRef.close(newQuestion);
+    });
   }
 }

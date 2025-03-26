@@ -65,3 +65,12 @@ export interface GameSessionQuestion {
   questionId: string;
   question?: Question;
 }
+
+
+export interface QuestionUpdate {
+  questionId: string;
+  question: string | null;
+  answer: string | null;
+  categoryId: string;
+  rowId: string;
+}
