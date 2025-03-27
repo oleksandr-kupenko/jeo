@@ -38,6 +38,22 @@ export interface Question {
   answeredByUserId?: string;
 }
 
+export interface QuestionUpdatedResponse extends Question {
+  category: {
+    id: string;
+    name: string;
+    order: number;
+    gameId: string;
+  };
+  
+  questionRow : {
+    id: string;
+    value: number;
+    order: number;
+    gameId: string;
+  };
+}
+
 export interface QuestionRow {
   id: string;
   value: number;

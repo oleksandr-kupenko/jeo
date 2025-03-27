@@ -1,8 +1,8 @@
-import {Component, computed, inject, OnInit, signal, Type} from '@angular/core';
-import {Category, Game, Question, QuestionRow} from '../game-board/interfaces/game-board.interfaces';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
+import {Category, Game, Question, QuestionRow, QuestionUpdatedResponse} from '../game-board/interfaces/game-board.interfaces';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {Dialog} from '@angular/cdk/dialog';
+import {Dialog, DialogRef} from '@angular/cdk/dialog';
 import {GameBoardService} from '../game-board/game-board.service';
 import {EditorModalComponent} from '../game-board/components/editor-modal/editor-modal.component';
 import {EditableCategoryComponent} from '../../components/editable-category/editable-category.component';
@@ -10,6 +10,19 @@ import {MediaPreviewPipe} from './media-preview.pipe';
 import {TruncateTextPipe} from './truncate-text.pipe';
 import {ActivatedRoute} from '@angular/router';
 import {EditablePointsComponent} from '../../components/editable-points/editable-points.component';
+
+interface CellData {
+  question?: Question;
+  category: Category;
+  rowValue: number;
+  isEmpty: boolean;
+}
+
+interface BoardRow {
+  id: string;
+  value: number;
+  cells: CellData[];
+}
 
 @Component({
   selector: 'app-editable-game-board',
@@ -30,30 +43,49 @@ export class EditableGameBoardComponent implements OnInit {
   private route = inject(ActivatedRoute);
   
   public game = signal<Game | null>(null);
-  public categories = computed<Category[]>(() => this.game()?.categories ?? []);
+  public categories = computed<Category[]>(() => this.game()?.categories!.sort((a, b) => a.order - b.order) ?? []);
   public questionRows = computed<QuestionRow[]>(() => 
     [...(this.game()?.questionRows ?? [])]
       .sort((a, b) => a.order - b.order)
   );
 
-  private routeId!: string | null;
+  // Готовая структура данных для доски
+  public boardRows = computed<BoardRow[]>(() => {
+    if (!this.game() || !this.questionRows().length || !this.categories().length) {
+      return [];
+    }
 
-  public questionsMap = computed(() => {
-    const map = new Map<string, Question>();
+    // Создаем словарь для быстрого доступа к вопросам
+    const questionsMap = new Map<string, Question>();
     this.questionRows().forEach(row => {
       row.questions.forEach(question => {
-        const key = `${question.categoryId}_${row.value}`;
-        map.set(key, question);
+        questionsMap.set(question.id, question);
       });
     });
-    return map;
+
+    // Создаем строки игрового поля
+    return this.questionRows().map(row => {
+      // Создаем ячейки для каждой категории в этой строке
+      const cells = this.categories().map(category => {
+        const question = row.questions.find(q => q.categoryId === category.id);
+        
+        return {
+          question,
+          category,
+          rowValue: row.value,
+          isEmpty: !question || !question.question || !question.answer
+        } as CellData;
+      });
+
+      return {
+        id: row.id,
+        value: row.value,
+        cells
+      };
+    });
   });
 
-  public getQuestion = computed(() => {
-    return (categoryId: string, value: number) => {
-      return this.questionsMap()?.get(`${categoryId}_${value}`);
-    };
-  });
+  private routeId!: string | null;
 
   ngOnInit() {
     this.routeId = this.route.snapshot.paramMap.get('id');
@@ -69,10 +101,6 @@ export class EditableGameBoardComponent implements OnInit {
         this.game.set(data);
       });
     }
-
-    // this.gameBoardService
-    //   .getCategories()
-    //   .subscribe((data) => this.categories.set(data));
   }
 
   public onPointsChange(rowId: string, newValue: number): void {
@@ -91,12 +119,12 @@ export class EditableGameBoardComponent implements OnInit {
     });
   }
 
-  onQuestionClick(category: Category, question: Question) {
+  public onQuestionClick(category: Category, question: Question) {
     this.openQuestionEditor(category, question);
   }
 
   private openQuestionEditor(category: Category, question: Question) {
-    const dialogRef = this.dialog.open(EditorModalComponent, {
+    const dialogRef: DialogRef<QuestionUpdatedResponse, EditorModalComponent> = this.dialog.open(EditorModalComponent, {
       width: '1000px',
       height: '450px',
       maxWidth: '90%',
@@ -107,13 +135,58 @@ export class EditableGameBoardComponent implements OnInit {
         categoryId: category.id
       }
     });
+
+    dialogRef.closed.subscribe((updatedQuestion: QuestionUpdatedResponse | undefined) => {
+      if (!updatedQuestion) return;
+
+      this.game.update(currentGame => {
+        if (!currentGame?.categories || !currentGame?.questionRows) return currentGame;
+
+        // Обновляем категории
+        const updatedCategories = currentGame.categories.map(category => {
+          if (category.id !== updatedQuestion.category.id) return category;
+
+          return {
+            ...category,
+            questions: category.questions.map(question => 
+              question.id === updatedQuestion.id ? updatedQuestion : question
+            )
+          };
+        });
+
+        // Обновляем строки вопросов
+        const updatedQuestionRows = currentGame.questionRows.map(row => {
+          if (row.id !== updatedQuestion.questionRow.id) return row;
+
+          return {
+            ...row,
+            questions: row.questions.map(question => 
+              question.id === updatedQuestion.id ? updatedQuestion : question
+            )
+          };
+        });
+
+        // Возвращаем обновленный объект игры
+        return {
+          ...currentGame,
+          categories: updatedCategories,
+          questionRows: updatedQuestionRows
+        };
+      });
+    });
   }
 
-  updateCategoryName(index: number, newName: string): void {
-    const updatedCategories = [...this.categories()];
-    updatedCategories[index].name = newName;
-    //this.categories.set(updatedCategories);
-
-    this.gameBoardService.updateCategoryName(updatedCategories[index].id, newName);
+  public updateCategoryName(id: string, newName: string): void {
+    this.gameBoardService.updateCategoryName(id, {name: newName}).subscribe((updatedCategory) => {
+      const currentGame = this.game();
+      if (!currentGame || !currentGame.categories) return;
+      
+      this.game.set({
+        ...currentGame,
+        categories: currentGame.categories.map(category => 
+          category.id === id ? updatedCategory : category
+        )
+      });
+    });
   }
 }

@@ -7,7 +7,7 @@
         <div class="category-cell bg-blue-900 text-white p-4">
           <app-editable-category
             [categoryName]="category.name"
-            (categoryNameChange)="updateCategoryName($index, $event)"
+            (categoryNameChange)="updateCategoryName(category.id, $event)"
           />
         </div>
       }
@@ -15,7 +15,7 @@
 
     <!-- Questions grid with points column -->
     <div class="questions-grid flex-grow grid grid-rows-5">
-      @for (row of questionRows(); track row.id) {
+      @for (row of boardRows(); track row.id) {
         <div class="questions-row grid grid-cols-[60px_repeat(5,1fr)]">
           <div class="points-cell flex items-center justify-center">
             <app-editable-points
@@ -23,21 +23,21 @@
               (pointsChange)="onPointsChange(row.id, $event)"
             />
           </div>
-          @for (category of categories(); track category.id) {
-            @if (getQuestion()(category.id, row.value); as question) {
+          @for (cell of row.cells; track cell.category.id) {
+            @if (cell.question) {
               <div
                 class="question-cell editor-cell"
-                [class.empty-cell]="!question.question || !question.answer"
-                (click)="onQuestionClick(category, question)"
+                [class.empty-cell]="cell.isEmpty"
+                (click)="onQuestionClick(cell.category, cell.question)"
               >
                 <div class="cell-value">{{ row.value }}</div>
                 <div class="cell-content">
                   <div class="question-preview">
-                    {{ question.question | mediaPreview | truncateText: 50 }}
+                    {{ cell.question.question | mediaPreview | truncateText: 50 }}
                   </div>
                   <div class="divider"></div>
                   <div class="answer-preview">
-                    {{ question.answer | mediaPreview | truncateText: 50 }}
+                    {{ cell.question.answer | mediaPreview | truncateText: 50 }}
                   </div>
                 </div>
               </div>

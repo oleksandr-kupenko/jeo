@@ -1,6 +1,6 @@
 import {inject, Injectable, resource} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Category, Game, Question, QuestionUpdate} from './interfaces/game-board.interfaces';
+import {Category, Game, Question, QuestionUpdate, QuestionUpdatedResponse} from './interfaces/game-board.interfaces';
 import {environment} from '../../../environments/environment.development';
 import {HttpClient} from '@angular/common/http';
 
@@ -49,22 +49,11 @@ export class GameBoardService {
     return this.categories$$.asObservable();
   }
 
-  updateCategoryName(categoryId: string, newName: string): void {
-    const updatedCategories = this.categories$$.getValue().map(category => {
-      if (category.id === categoryId) {
-        return {
-          ...category,
-          name: newName
-        };
-      }
-      return category;
-    });
-
-    this.categories$$.next(updatedCategories);
-    this.saveCategoriesToStorage(updatedCategories);
+  updateCategoryName(categoryId: string, data: {name?: string, order?: number}): Observable<Category> {
+    return this.http.put<Category>(`${this.baseUrl}/api/categories/${categoryId}`, data);
   }
 
-  updateQuestion(data: QuestionUpdate): Observable<Question> {
+  updateQuestion(data: QuestionUpdate): Observable<QuestionUpdatedResponse> {
     const postData = {
       question: data.question,
       answer: data.answer,
@@ -72,7 +61,7 @@ export class GameBoardService {
       rowId: data.rowId
     };
 
-    return this.http.patch<Question>(`${this.baseUrl}/api/questions/${data.questionId}`, postData);
+    return this.http.patch<QuestionUpdatedResponse>(`${this.baseUrl}/api/questions/${data.questionId}`, postData);
 
     // const updatedCategories = this.categories$$.getValue().map(category => {
     //   if (category.id === categoryId) {

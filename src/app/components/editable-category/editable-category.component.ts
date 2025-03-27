@@ -64,6 +64,8 @@ export class EditableCategoryComponent {
   public categoryName = input<string>('');
   public categoryNameChange = output<string>();
   public isEditing = signal<boolean>(false);
+
+  private newName = signal<string>('');
   
   public startEditing(): void {
     this.isEditing.set(true);
@@ -71,9 +73,10 @@ export class EditableCategoryComponent {
   
   public finishEditing(): void {
     this.isEditing.set(false);
+    this.categoryNameChange.emit(this.newName());
   }
   
   public updateCategoryName(newValue: string): void {
-    this.categoryNameChange.emit(newValue);
+    this.newName.set(newValue);
   }
 } 
