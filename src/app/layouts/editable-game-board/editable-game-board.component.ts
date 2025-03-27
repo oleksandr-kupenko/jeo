@@ -9,11 +9,18 @@ import {EditableCategoryComponent} from '../../components/editable-category/edit
 import {MediaPreviewPipe} from './media-preview.pipe';
 import {TruncateTextPipe} from './truncate-text.pipe';
 import {ActivatedRoute} from '@angular/router';
+import {EditablePointsComponent} from '../../components/editable-points/editable-points.component';
 
 @Component({
   selector: 'app-editable-game-board',
   standalone: true,
-  imports: [ FormsModule, EditableCategoryComponent, MediaPreviewPipe, TruncateTextPipe],
+  imports: [ 
+    FormsModule, 
+    EditableCategoryComponent, 
+    MediaPreviewPipe, 
+    TruncateTextPipe,
+    EditablePointsComponent
+  ],
   templateUrl: './editable-game-board.component.html',
   styleUrl: './editable-game-board.component.scss'
 })
@@ -24,8 +31,29 @@ export class EditableGameBoardComponent implements OnInit {
   
   public game = signal<Game | null>(null);
   public categories = computed<Category[]>(() => this.game()?.categories ?? []);
-  public questionValues = computed<QuestionRow[]>(() => this.game()?.questionRows ?? []);
+  public questionRows = computed<QuestionRow[]>(() => 
+    [...(this.game()?.questionRows ?? [])]
+      .sort((a, b) => a.order - b.order)
+  );
+
   private routeId!: string | null;
+
+  public questionsMap = computed(() => {
+    const map = new Map<string, Question>();
+    this.questionRows().forEach(row => {
+      row.questions.forEach(question => {
+        const key = `${question.categoryId}_${row.value}`;
+        map.set(key, question);
+      });
+    });
+    return map;
+  });
+
+  public getQuestion = computed(() => {
+    return (categoryId: string, value: number) => {
+      return this.questionsMap()?.get(`${categoryId}_${value}`);
+    };
+  });
 
   ngOnInit() {
     this.routeId = this.route.snapshot.paramMap.get('id');
@@ -47,11 +75,20 @@ export class EditableGameBoardComponent implements OnInit {
     //   .subscribe((data) => this.categories.set(data));
   }
 
-  public getQuestionForCategoryAndValue(category: Category, value: number): Question | undefined {
-    const row = this.questionValues().find(r => r.value === value);
-    if (!row) return undefined;
-    
-    return row.questions.find(q => q.categoryId === category.id);
+  public onPointsChange(rowId: string, newValue: number): void {
+    console.log(`Points changed for row ${rowId} to ${newValue}`);
+    this.gameBoardService.updateRowQuestionPoints(rowId, newValue).subscribe(data => {
+      console.log('data', data);
+      const currentGame = this.game();
+      if (!currentGame?.questionRows) return;
+      
+      this.game.update(game => ({
+        ...currentGame,
+        questionRows: currentGame!.questionRows!.map(row => 
+          row.id === rowId ? {...row, value: newValue} : row
+        )
+      }));
+    });
   }
 
   onQuestionClick(category: Category, question: Question) {

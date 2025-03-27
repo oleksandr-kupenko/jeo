@@ -98,6 +98,10 @@ export class GameBoardService {
     // this.saveCategoriesToStorage(updatedCategories);
   }
 
+  updateRowQuestionPoints(rowId: string, newValue: number): Observable<Question> {
+    return this.http.patch<Question>(`${this.baseUrl}/api/questions/rows/${rowId}`, {value: newValue});
+  }
+
   getAllGames() {
     return this.http.get<Game[]>(`${this.baseUrl}/api/games`);
   }
