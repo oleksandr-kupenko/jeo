@@ -8,6 +8,7 @@ import {authRoutes} from './auth/auth.routes';
 import {GameChoiceComponent} from './layouts/game-choice/game-choice.component';
 import {NewGameComponent} from './layouts/new-game/new-game.component';
 import {AutomaticallyGeneratedGameComponent} from './layouts/automatically-generated-game/automatically-generated-game.component';
+import { CreateGameSessionComponent } from './layouts/create-game-session/create-game-session.component';
 
 export const routes: Routes = [
   {
@@ -43,7 +44,11 @@ export const routes: Routes = [
         component: EditableGameBoardComponent
       },
       {
-        path: 'game/:id',
+        path: 'game/start/:id',
+        component: CreateGameSessionComponent
+      },
+      {
+        path: 'game/session/:id',
         component: GameBoardComponent
       }
     ]

@@ -1,4 +1,5 @@
 import {User} from '../../../auth/interfaces/auth.interface';
+import { GameSession } from '../../create-game-session/interfaces/gama-session.interface';
 
 export interface Game {
   id: string;
@@ -53,35 +54,6 @@ export interface QuestionUpdatedResponse extends Question {
     gameId: string;
   };
 }
-
-export interface QuestionRow {
-  id: string;
-  value: number;
-  order: number;
-  gameId: string;
-  questions: Question[];
-}
-
-export interface GameSession {
-  id: string;
-  startedAt: string;
-  endedAt?: string;
-  currentTurn?: string;
-  gameId: string;
-  game: Game;
-  questions?: GameSessionQuestion[];
-}
-
-export interface GameSessionQuestion {
-  id: string;
-  isRevealed: boolean;
-  isAnswered: boolean;
-  answeredByUserId?: string;
-  gameSessionId: string;
-  questionId: string;
-  question?: Question;
-}
-
 
 export interface QuestionUpdate {
   questionId: string;

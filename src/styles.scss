@@ -5,6 +5,24 @@
 @import "quill/dist/quill.snow.css";
 @import "highlight.js/styles/github.css";
 
+@layer components {
+  .btn {
+    @apply px-6 py-3 rounded-lg transition-colors;
+    
+    &:disabled {
+      @apply opacity-50 cursor-not-allowed hover:bg-opacity-100;
+    }
+  }
+  
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700;
+  }
+  
+  .btn-success {
+    @apply bg-green-600 text-white hover:bg-green-700;
+  }
+}
+
 :root {
   --primary: 222.2 47.4% 11.2%;
   --primary-foreground: 210 40% 98%;

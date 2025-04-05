@@ -10,4 +10,10 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+  
+  safelist: [
+    'btn',
+    'btn-primary',
+    'btn-success'
+  ]
 };

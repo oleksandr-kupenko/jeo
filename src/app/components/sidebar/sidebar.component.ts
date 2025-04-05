@@ -41,16 +41,7 @@ import { RouterModule } from '@angular/router';
               class="block py-2 px-4 rounded hover:bg-blue-700 transition-colors"
               (click)="handleCloseSidebar()"
             >
-              Главная
-            </a>
-          </li>
-          <li>
-            <a 
-              routerLink="/games/list" 
-              class="block py-2 px-4 rounded hover:bg-blue-700 transition-colors"
-              (click)="handleCloseSidebar()"
-            >
-              Мои игры
+              Home
             </a>
           </li>
           <li>
@@ -59,7 +50,26 @@ import { RouterModule } from '@angular/router';
               class="block py-2 px-4 rounded hover:bg-blue-700 transition-colors"
               (click)="handleCloseSidebar()"
             >
-              Создать игру
+              Create new Game
+            </a>
+          </li>
+          <li>
+            <a 
+              routerLink="/games/list" 
+              class="block py-2 px-4 rounded hover:bg-blue-700 transition-colors"
+              (click)="handleCloseSidebar()"
+            >
+              Games list
+            </a>
+          </li>
+
+          <li>
+            <a 
+              routerLink="/games/new" 
+              class="block py-2 px-4 rounded hover:bg-blue-700 transition-colors"
+              (click)="handleCloseSidebar()"
+            >
+              My started games
             </a>
           </li>
         </ul>

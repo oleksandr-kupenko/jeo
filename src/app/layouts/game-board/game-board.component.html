@@ -1,25 +1,30 @@
 <div class="jeopardy-container h-full p-4">
   <div class="jeopardy-board h-full flex flex-col">
-    <div class="categories-row grid grid-cols-5 gap-1 mb-1">
+    <!-- Header row with category names -->
+    <div class="grid grid-cols-5 gap-1 mb-1">
       @for (category of categories(); track $index) {
-        <div class="category-cell bg-blue-900 text-white p-4">
-          <div class="category-header flex items-center justify-center font-bold text-center">
-            {{ category.name }}
-          </div>
+        <div class="category-cell bg-blue-900 text-white p-4 flex items-center justify-center">
+      
+            <p class="category-header font-bold text-center">
+              {{ category.name }}
+            </p>
+        
         </div>
       }
     </div>
 
+    <!-- Questions grid -->
     <div class="questions-grid flex-grow grid grid-rows-5">
-      @for (value of [100, 200, 300, 400, 500]; track value) {
+      @for (row of boardRows(); track row.id) {
         <div class="questions-row grid grid-cols-5">
-          @for (category of categories(); track category.name) {
+          @for (cell of row.cells; track cell.category.id) {
             <div
               class="question-cell"
-              [class.answered]="false"
-              (click)="onQuestionClick(category, category.questions[value / 100 - 1])"
+              [class.empty-cell]="cell.isEmpty"
+              [class.answered]="cell.isAnswered"
+              (click)="!cell.isEmpty && !cell.isAnswered && onQuestionClick(cell.category, cell.question!)"
             >
-              {{ "category.questions[value/100 - 1].value" }}
+              <div class="cell-value">{{ row.value }}</div>
             </div>
           }
         </div>

@@ -4,7 +4,7 @@
 
         <li class="mb-2">
           <div class="flex gap-5 items-center justify-center">
-          <a [routerLink]="'/game/' + game.id" class="block w-80 p-3  border-2 text-white border-yellow-400 rounded hover:bg-yellow-100 hover:text-black cursor-pointer transition-colors">
+          <a [routerLink]="'/game/start/' + game.id" class="block w-80 p-3  border-2 text-white border-yellow-400 rounded hover:bg-yellow-100 hover:text-black cursor-pointer transition-colors">
             {{game.title}}</a>
             <button
               [routerLink]="'/game/edit/' + game.id"

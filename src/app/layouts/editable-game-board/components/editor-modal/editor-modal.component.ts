@@ -1,10 +1,10 @@
 import {Component, Inject, OnInit, inject} from '@angular/core';
 import {DIALOG_DATA, DialogRef} from '@angular/cdk/dialog';
-import {Question, QuestionUpdate} from '../../interfaces/game-board.interfaces';
+import {Question, QuestionUpdate} from '../../../game-board/interfaces/game-board.interfaces';
 import {FormsModule} from '@angular/forms';
 import {ContentChange, QuillEditorComponent, QuillModules} from 'ngx-quill';
 import hljs from 'highlight.js';
-import {GameBoardService} from '../../game-board.service';
+import { EditableGameBoardService } from '../../editable-game-board.service';
 
 @Component({
   selector: 'app-editor-modal',
@@ -17,7 +17,7 @@ import {GameBoardService} from '../../game-board.service';
 })
 export class EditorModalComponent implements OnInit {
   private readonly dialogRef = inject(DialogRef<Question>);
-  private readonly gameBoardService = inject(GameBoardService);
+  private readonly editableGameBoardService = inject(EditableGameBoardService);
   
   public question = '';
   public answer = '';
@@ -53,7 +53,7 @@ export class EditorModalComponent implements OnInit {
       rowId: this.data.question.rowId
     }
 
-    this.gameBoardService.updateQuestion(questionUpdate).subscribe(newQuestion => {
+    this.editableGameBoardService.updateQuestion(questionUpdate).subscribe(newQuestion => {
       this.dialogRef.close(newQuestion);
     });
   }

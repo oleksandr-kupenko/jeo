@@ -1,15 +1,14 @@
-import {Component, computed, inject, OnInit, signal} from '@angular/core';
-import {Category, Game, Question, QuestionRow, QuestionUpdatedResponse} from '../game-board/interfaces/game-board.interfaces';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {Dialog, DialogRef} from '@angular/cdk/dialog';
-import {GameBoardService} from '../game-board/game-board.service';
-import {EditorModalComponent} from '../game-board/components/editor-modal/editor-modal.component';
-import {EditableCategoryComponent} from '../../components/editable-category/editable-category.component';
-import {MediaPreviewPipe} from './media-preview.pipe';
-import {TruncateTextPipe} from './truncate-text.pipe';
-import {ActivatedRoute} from '@angular/router';
-import {EditablePointsComponent} from '../../components/editable-points/editable-points.component';
+import { Dialog, DialogRef } from '@angular/cdk/dialog';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { Category, Game, Question, QuestionRow, QuestionUpdatedResponse } from '../game-board/interfaces/game-board.interfaces';
+import { EditableCategoryComponent } from './components/editable-category/editable-category.component';
+import { EditablePointsComponent } from './components/editable-points/editable-points.component';
+import { EditorModalComponent } from './components/editor-modal/editor-modal.component';
+import { EditableGameBoardService } from './editable-game-board.service';
+import { MediaPreviewPipe } from './media-preview.pipe';
+import { TruncateTextPipe } from './truncate-text.pipe';
 
 interface CellData {
   question?: Question;
@@ -39,7 +38,7 @@ interface BoardRow {
 })
 export class EditableGameBoardComponent implements OnInit {
   private dialog = inject(Dialog);
-  private gameBoardService = inject(GameBoardService);
+  private editableGameBoardService = inject(EditableGameBoardService);
   private route = inject(ActivatedRoute);
   
   public game = signal<Game | null>(null);
@@ -91,12 +90,12 @@ export class EditableGameBoardComponent implements OnInit {
     this.routeId = this.route.snapshot.paramMap.get('id');
 
     if (this.routeId === 'new') {
-      this.gameBoardService.createGame('TEST').subscribe(data => {
+      this.editableGameBoardService.createGame('New Game').subscribe(data => {
         console.log('data', data);
         this.game.set(data);
       });
     } else {
-      this.gameBoardService.getGame(this.routeId!).subscribe(data => {
+      this.editableGameBoardService.getGame(this.routeId!).subscribe(data => {
         console.log('data', data);
         this.game.set(data);
       });
@@ -105,7 +104,7 @@ export class EditableGameBoardComponent implements OnInit {
 
   public onPointsChange(rowId: string, newValue: number): void {
     console.log(`Points changed for row ${rowId} to ${newValue}`);
-    this.gameBoardService.updateRowQuestionPoints(rowId, newValue).subscribe(data => {
+    this.editableGameBoardService.updateRowQuestionPoints(rowId, newValue).subscribe(data => {
       console.log('data', data);
       const currentGame = this.game();
       if (!currentGame?.questionRows) return;
@@ -177,7 +176,7 @@ export class EditableGameBoardComponent implements OnInit {
   }
 
   public updateCategoryName(id: string, newName: string): void {
-    this.gameBoardService.updateCategoryName(id, {name: newName}).subscribe((updatedCategory) => {
+    this.editableGameBoardService.updateCategoryName(id, {name: newName}).subscribe((updatedCategory) => {
       const currentGame = this.game();
       if (!currentGame || !currentGame.categories) return;
       

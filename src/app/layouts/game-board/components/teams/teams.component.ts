@@ -1,5 +1,4 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {GameBoardService} from '../../game-board.service';
 import {FormsModule} from '@angular/forms';
 import {debounceTime, Subject} from 'rxjs';
 import {CurrentQuestionService} from '../../../../services/current-question.service';
@@ -19,15 +18,10 @@ export class TeamsComponent implements OnInit {
   private currentQuestionService = inject(CurrentQuestionService);
   public currentPoints = toSignal(this.currentQuestionService.getCurrentQuestionPoints());
 
-  constructor(private gameBoardService: GameBoardService) {}
+  constructor() {}
 
   ngOnInit(): void {
-    this.gameBoardService.getTeams().subscribe(data => this.teams.set(data));
 
-    this.updateTeamTrigger.pipe(debounceTime(1000)).subscribe(() => {
-      console.log('SAVE');
-      this.gameBoardService.updateTeams([]);
-    });
   }
 
   public handleUpdateTeams() {

@@ -2,7 +2,7 @@ import {Component, inject, OnInit, signal} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
 import {MatMiniFabButton} from '@angular/material/button';
-import { GameBoardService } from '../game-board/game-board.service';
+import { EditableGameBoardService } from '../editable-game-board/editable-game-board.service';
 import { Game } from '../game-board/interfaces/game-board.interfaces';
 
 @Component({
@@ -12,7 +12,7 @@ import { Game } from '../game-board/interfaces/game-board.interfaces';
   styleUrl: './games-list.component.scss'
 })
 export class GamesListComponent implements OnInit {
-  private gameBoardService = inject(GameBoardService);
+  private gameBoardService = inject(EditableGameBoardService);
   public gameList = signal<Game[]>([]);
 
   constructor() {}
