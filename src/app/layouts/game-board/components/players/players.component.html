@@ -1,0 +1,20 @@
+<div class="players-container flex flex-wrap gap-4 justify-center mt-4">
+  @for (player of players(); track player.id) {
+    <div class="player" [class.active]="player.active">
+      <div class="player-name">{{player.name}}</div>
+      <div class="player-score">{{player.points}}</div>
+      <div class="score-controls">
+        <button 
+          class="score-btn" 
+          [disabled]="!currentPoints()" 
+          (click)="handleDecreasePoints(player.id)"
+        >-</button>
+        <button 
+          class="score-btn" 
+          [disabled]="!currentPoints()" 
+          (click)="handleIncreasePoints(player.id)"
+        >+</button>
+      </div>
+    </div>
+  }
+</div> 

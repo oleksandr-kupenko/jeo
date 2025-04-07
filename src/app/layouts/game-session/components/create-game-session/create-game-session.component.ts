@@ -4,10 +4,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
-import { GameSessionService } from './game-session.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NewGameSessionParams } from './interfaces/gama-session.interface';
+import { GameSessionService } from '../../game-session.service';
+import { NewGameSessionParams } from '../../interfaces/gama-session.interface';
 
 interface GameSessionFormControls {
   name: FormControl<string>;

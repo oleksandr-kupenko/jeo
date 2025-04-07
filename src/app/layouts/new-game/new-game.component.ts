@@ -1,11 +1,16 @@
 import {Component} from '@angular/core';
 import {RouterLink} from '@angular/router';
+import { SubHeaderComponent } from "../sub-header/sub-header.component";
 
 @Component({
   selector: 'app-new-game',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, SubHeaderComponent],
   template: `
+<app-sub-header [backUrl]="'/'">
+  Создание новой игры
+</app-sub-header>
+
     <div class="flex items-center justify-center h-screen gap-4 flex-col">
       <h2 class="text-2xl font-bold mb-6">Выберите способ создания игры</h2>
 

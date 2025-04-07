@@ -1,71 +1,121 @@
-.jeopardy-container {
-  background-color: #060CE9;
+:root {
+  --primary-color: #4527a0;
+  --primary-light: #5e35b1;
+  --primary-dark: #311b92;
+  --accent-color: #7c4dff;
+  --text-color: #ffffff;
+  --secondary-text: #e0e0e0;
+  --team-bg: #2c2157;
+  --team-active: #7c4dff;
+  --cell-hover: rgba(255, 255, 255, 0.1);
+  --button-hover: rgba(255, 255, 255, 0.2);
+}
 
-  .jeopardy-board {
-    .category-cell {
-      border-radius: 5px;
-      border: 2px solid black;
-      height: 70px;
-    }
+.game-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 20px;
+  background-color: var(--primary-dark);
+  color: var(--text-color);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
-    .questions-grid {
-      font-family: 'Swiss911', Arial, sans-serif;
-      .questions-row {
-        .points-cell {
-          color: white;
-          font-weight: bold;
-          font-size: 1.2rem;
-        }
-        
-        .question-cell {
-          border-radius: 5px;
-          border: 2px solid black;
-          margin: 1px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: relative;
-          background-color: #060CE9;
-          color: gold;
-          font-size: 2.1rem;
-          font-weight: 600;
-          height: 100%;
-          min-height: 80px;
-          transition: all 0.2s;
-          cursor: pointer;
-          
-          &:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-          }
-          
-          &.answered {
-            background-color: #1c3194;
-            color: #6e6a4e;
-            cursor: default;
-            
-            &:hover {
-              transform: none;
-              box-shadow: none;
-            }
-          }
-          
-          &.empty-cell {
-            background-color: #4a4a4a;
-            border: 2px dashed #777;
-            cursor: default;
-            
-            .cell-value {
-              color: #bbb;
-            }
-            
-            &:hover {
-              transform: none;
-              box-shadow: none;
-            }
-          }
-        }
-      }
-    }
+.game-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.category {
+  background-color: var(--primary-color);
+  padding: 15px 10px;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70px;
+}
+
+.cell {
+  background-color: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  border-radius: 8px;
+  aspect-ratio: 1.5 / 1;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  &.selected {
+    background-color: var(--primary-dark);
+    color: var(--secondary-text);
+    cursor: default;
+    transform: none;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  &.empty-cell {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .game-board {
+    gap: 5px;
+  }
+  
+  .category {
+    font-size: 0.8rem;
+    padding: 10px 5px;
+    min-height: 50px;
+  }
+  
+  .cell {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-title {
+    font-size: 1.8rem;
+  }
+  
+  .category {
+    font-size: 0.7rem;
+    padding: 8px 3px;
+  }
+  
+  .cell {
+    font-size: 1rem;
   }
 }

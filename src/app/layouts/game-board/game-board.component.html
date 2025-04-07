@@ -1,35 +1,30 @@
-<div class="jeopardy-container h-full p-4">
-  <div class="jeopardy-board h-full flex flex-col">
+<div class="game-container">
+  <h1 class="game-title">KNOWLEDGE QUEST</h1>
+
+  <div class="jeopardy-board">
     <!-- Header row with category names -->
-    <div class="grid grid-cols-5 gap-1 mb-1">
+    <div class="game-board">
       @for (category of categories(); track $index) {
-        <div class="category-cell bg-blue-900 text-white p-4 flex items-center justify-center">
-      
-            <p class="category-header font-bold text-center">
-              {{ category.name }}
-            </p>
-        
+        <div class="category">
+          <p>{{ category.name }}</p>
         </div>
       }
-    </div>
 
-    <!-- Questions grid -->
-    <div class="questions-grid flex-grow grid grid-rows-5">
+      <!-- Questions grid -->
       @for (row of boardRows(); track row.id) {
-        <div class="questions-row grid grid-cols-5">
-          @for (cell of row.cells; track cell.category.id) {
-            <div
-              class="question-cell"
-              [class.empty-cell]="cell.isEmpty"
-              [class.answered]="cell.isAnswered"
-              (click)="!cell.isEmpty && !cell.isAnswered && onQuestionClick(cell.category, cell.question!)"
-            >
-              <div class="cell-value">{{ row.value }}</div>
-            </div>
-          }
-        </div>
+        @for (cell of row.cells; track cell.category.id) {
+          <div
+            class="cell"
+            [class.selected]="cell.isAnswered"
+            [class.empty-cell]="cell.isEmpty"
+            (click)="!cell.isEmpty && !cell.isAnswered && onQuestionClick(cell.category, cell.question!)"
+          >
+            <div>{{ row.value }}</div>
+          </div>
+        }
       }
     </div>
   </div>
+  
+  <app-players></app-players>
 </div>
-<app-teams></app-teams>

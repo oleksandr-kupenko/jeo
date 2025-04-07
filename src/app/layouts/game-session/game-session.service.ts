@@ -16,6 +16,10 @@ export class GameSessionService {
 
     constructor() {}
 
+    getAllGameSessions(): Observable<GameSession[]> {
+        return this.http.get<GameSession[]>(`${this.baseUrl}/api/game-sessions`);
+    }
+
     createGameSession(gameSessionParams: NewGameSessionParams): Observable<GameSession> {
         return this.http.post<GameSession>(`${this.baseUrl}/api/game-sessions`, gameSessionParams).pipe(
             tap((gameSession) => {

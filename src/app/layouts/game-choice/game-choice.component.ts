@@ -14,9 +14,8 @@ import { RouterLink } from '@angular/router';
       </button>
 
       <button 
-        routerLink="/games/list"
-        class="btn btn-success"
-        [disabled]="true">
+        routerLink="/games/sessions"
+        class="btn btn-success">
         Continue game
       </button>
       

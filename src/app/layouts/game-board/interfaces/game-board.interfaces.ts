@@ -1,5 +1,5 @@
 import {User} from '../../../auth/interfaces/auth.interface';
-import { GameSession } from '../../create-game-session/interfaces/gama-session.interface';
+import { GameSession } from '../../game-session/interfaces/gama-session.interface';
 
 export interface Game {
   id: string;

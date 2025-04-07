@@ -2,12 +2,12 @@ import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import {Category, Game, Question, QuestionRow} from './interfaces/game-board.interfaces';
 import {QuestionModalComponent} from './components/question-modal/question-modal.component';
 import {Dialog} from '@angular/cdk/dialog';
-import {TeamsComponent} from './components/teams/teams.component';
+import {PlayersComponent} from './components/players/players.component';
 import {CurrentQuestionService} from '../../services/current-question.service';
 import {CommonModule} from '@angular/common';
 import {ActivatedRoute} from '@angular/router';
-import { GameSessionService } from '../create-game-session/game-session.service';
-import { GameSession } from '../create-game-session/interfaces/gama-session.interface';
+import { GameSessionService } from '../game-session/game-session.service';
+import { GameSession } from '../game-session/interfaces/gama-session.interface';
 
 interface CellData {
   question?: Question;
@@ -26,7 +26,7 @@ interface BoardRow {
 @Component({
   selector: 'app-game-board',
   standalone: true,
-  imports: [CommonModule, TeamsComponent],
+  imports: [CommonModule, PlayersComponent],
   templateUrl: './game-board.component.html',
   styleUrl: './game-board.component.scss'
 })
@@ -110,7 +110,6 @@ export class GameBoardComponent implements OnInit {
           question = category.questions.find(q => q && q.rowId === row.id);
         }
         
-        console.log(`Row ${row.id}, Category ${category.id}:`, question ? `Question found: ${question.id}` : 'No question found');
         
         return {
           question,
