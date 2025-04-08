@@ -4,7 +4,6 @@ import {provideRouter} from '@angular/router';
 import {routes} from './app.routes';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 import {provideQuillConfig} from 'ngx-quill';
-import {MyQuillVideo} from './core/my-quill-video';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {authInterceptor, errorInterceptor} from './core/interceptors';
 
@@ -17,7 +16,6 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor, errorInterceptor])
     ),
     provideQuillConfig({
-      customModules: [{path: 'formats/video', implementation: MyQuillVideo}],
       modules: {
         syntax: true,
         toolbar: {

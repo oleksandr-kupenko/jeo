@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "quill/dist/quill.snow.css";
+
 @import "highlight.js/styles/github.css";
+
 
 /* Reset Styles */
 button {
@@ -93,10 +94,15 @@ html,
 body {
   height: 100%;
 }
+
 body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
 
 .kdb {
   -moz-border-radius: 3px;

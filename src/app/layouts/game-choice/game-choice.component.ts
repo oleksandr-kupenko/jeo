@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink],
   template: `
-    <div class="flex items-center justify-center h-screen gap-4">
+    <div class="flex items-center justify-center h-full gap-4">
       <button 
         routerLink="/games/new"
         class="btn btn-primary">
@@ -28,7 +28,8 @@ import { RouterLink } from '@angular/router';
   `,
   styles: [`
     :host {
-      display: block;
+      display: flex;
+      flex-direction: column;
       height: 100%;
       width: 100%;
     }
