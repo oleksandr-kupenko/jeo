@@ -80,7 +80,7 @@ html,
 body {
   height: 100%;
   width: 100%;
-  background: darkblue;
+  
 
   * {
     font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -100,7 +100,9 @@ body {
   flex-direction: column;
   overflow: hidden;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'Montserrat', sans-serif, sans-serif;
+  background: var(--primary-dark);
+  color: var(--text-color);
 }
 
 

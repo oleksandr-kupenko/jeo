@@ -4,7 +4,7 @@
     <div class="grid grid-cols-[60px_repeat(5,1fr)] gap-1 mb-1">
       <div class="bg-transparent"></div>
       @for (category of categories(); track $index) {
-        <div class="category-cell bg-blue-900 text-white p-4">
+        <div class="category-cell p-4">
           <app-editable-category
             [categoryName]="category.name"
             (categoryNameChange)="updateCategoryName(category.id, $event)"

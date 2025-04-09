@@ -17,12 +17,11 @@ export const errorInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, n
         authService.logout();
         notificationService.showNotification('error', 'Unauthorized access. Please login again.', 5000);
       } else {
-        console.log('ERROR')
-        const errorMessage = 'An unexpected error occurred';
+        const errorMessage = error.message || 'An unexpected error occurred';
         notificationService.showNotification('error', errorMessage, 5000);
       }
 
-      return throwError(() => error);
+      return throwError(() => null);
     })
   );
 };

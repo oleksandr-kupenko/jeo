@@ -1,14 +1,7 @@
-:root {
-  --primary-color: #4527a0;
-  --primary-light: #5e35b1;
-  --primary-dark: #311b92;
-  --accent-color: #7c4dff;
-  --text-color: #ffffff;
-  --secondary-text: #e0e0e0;
-  --team-bg: #2c2157;
-  --team-active: #7c4dff;
-  --cell-hover: rgba(255, 255, 255, 0.1);
-  --button-hover: rgba(255, 255, 255, 0.2);
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .game-container {
@@ -18,7 +11,7 @@
   padding: 20px;
   background-color: var(--primary-dark);
   color: var(--text-color);
-  min-height: 100vh;
+  min-height: 1100px;
   display: flex;
   flex-direction: column;
 }
@@ -32,27 +25,39 @@
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.game-board {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  margin-bottom: 30px;
+.jeopardy-board {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .game-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 30px;
+
+    .category {
+      background-color: var(--primary-color);
+      padding: 15px 10px;
+      text-align: center;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 70px;
+
+      
+    }
+  }
 }
 
-.category {
-  background-color: var(--primary-color);
-  padding: 15px 10px;
-  text-align: center;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1.1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 70px;
-}
+
+
+
 
 .cell {
   background-color: var(--primary-light);
