@@ -1,10 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NgxSonnerToaster, toast } from 'ngx-sonner';
 import { HlmToasterComponent } from "../../libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component";
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NotificationService } from './core/services/notification.service';
-import { toast, NgxSonnerToaster } from 'ngx-sonner';
 
 @Component({
   selector: 'app-root',

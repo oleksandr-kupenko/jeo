@@ -1,29 +1,24 @@
-<app-sub-header>
-  Game List
-</app-sub-header>
+<app-sub-header [backUrl]="'/games'"> Game List </app-sub-header>
 
 <div class="flex items-center justify-center h-full w-full">
   <ul class="m-auto">
-    @for(game of gameList(); track game.id) {
-
-        <li class="mb-2">
-          <div class="flex gap-5 items-center justify-center">
-          <a [routerLink]="'/games/sessions/new/' + game.id" class="block w-80 p-3  border-2 text-white border-yellow-400 rounded hover:bg-yellow-100 hover:text-black cursor-pointer transition-colors">
-            {{game.title}}</a>
-            <button
-              [routerLink]="'/game/edit/' + game.id"
-              mat-mini-fab>
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-            (click)="handleDeleteGame(game.id)"
-            mat-mini-fab>
+    @for (game of gameList(); track game.id) {
+      <li class="mb-2">
+        <div class="flex gap-5 items-center justify-center">
+          <a
+            [routerLink]="'/games/sessions/new/' + game.id"
+            class="block w-80 p-3 border-2 text-white border-yellow-400 rounded hover:bg-yellow-100 hover:text-black cursor-pointer transition-colors"
+          >
+            {{ game.title }}</a
+          >
+          <button [routerLink]="'/game/edit/' + game.id" mat-mini-fab>
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button (click)="handleDeleteGame(game.id)" mat-mini-fab>
             <mat-icon>delete</mat-icon>
           </button>
-          </div>
-        </li>
-
-
+        </div>
+      </li>
     }
   </ul>
 </div>
