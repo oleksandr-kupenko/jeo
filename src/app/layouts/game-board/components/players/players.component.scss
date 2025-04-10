@@ -1,5 +1,10 @@
 .players-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
   margin-top: 20px;
+  flex-shrink: 0;
 }
 
 .player {
@@ -60,5 +65,96 @@
     background-color: rgba(128, 128, 128, 0.4);
     color: rgba(255, 255, 255, 0.5);
     cursor: not-allowed;
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 1080px) {
+  .player {
+    width: 130px;
+  }
+  
+  .player-score {
+    font-size: 1.6rem;
+    padding: 12px 0;
+  }
+  
+  .score-btn {
+    font-size: 1.1rem;
+    padding: 6px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .players-container {
+    gap: 0.7rem;
+  }
+  
+  .player {
+    width: 110px;
+  }
+  
+  .player-name {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+  
+  .player-score {
+    font-size: 1.4rem;
+    padding: 10px 0;
+  }
+  
+  .score-btn {
+    font-size: 1rem;
+    padding: 5px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .players-container {
+    gap: 0.5rem;
+  }
+  
+  .player {
+    width: 90px;
+  }
+  
+  .player-name {
+    font-size: 0.7rem;
+    padding: 6px;
+  }
+  
+  .player-score {
+    font-size: 1.2rem;
+    padding: 8px 0;
+  }
+  
+  .score-btn {
+    font-size: 0.9rem;
+    padding: 4px 0;
+  }
+}
+
+@media (max-height: 700px) {
+  .players-container {
+    margin-top: 10px;
+  }
+  
+  .player {
+    width: 110px;
+  }
+  
+  .player-name {
+    font-size: 0.8rem;
+    padding: 5px;
+  }
+  
+  .player-score {
+    font-size: 1.4rem;
+    padding: 8px 0;
+  }
+  
+  .score-btn {
+    padding: 4px 0;
   }
 } 

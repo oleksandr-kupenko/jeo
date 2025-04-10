@@ -1,98 +1,286 @@
-  
-.jeopardy-container {
-    .jeopardy-board {
-        .questions-row {
-            gap: 4px;
-            margin-bottom: 4px;
-          }
+/* Common Jeopardy Game Board Styles */
 
-        .categories-row {
-          .category-cell {
-            border-radius: 5px;
-            border: 2px solid black;
-            height: 70px;
-          }
-        }
-    
-        .category-cell {
-      text-align: center;
-      font-weight: bold;
-      border-radius: 4px;
-    }
-    
-        .questions-grid {
-          font-family: 'Swiss911', Arial, sans-serif;
-          .questions-row {
-            .question-cell {
-              border-radius: 5px;
-              border: 2px solid black;
-              margin: 1px;
-              display: flex;
-              flex-direction: column;
-              position: relative;
-              background-color: #060CE9;
-              color: gold;
-              font-size: 2.1rem;
-              font-weight: 600;
-              
-              &.answered {
-                background-color: #1c3194;
-                color: #6e6a4e;
-              }
-              
-              &.empty-cell {
-                background-color: #4a4a4a;
-                border: 2px dashed #777;
-                
-                .cell-value {
-                  color: #bbb;
-                }
-                
-                .cell-content {
-                  color: #aaa;
-                }
-              }
-              
-              &.editor-cell {
-                min-height: 100px;
-                text-align: center;
-                cursor: pointer;
-                padding: 0.5rem;
-                justify-content: flex-start;
-                
-                .cell-value {
-                  font-size: 2.1rem;
-                  margin-bottom: 0.5rem;
-                }
-                
-                .cell-content {
-                  font-size: 0.75rem;
-                  color: white;
-                  display: flex;
-                  flex-direction: column;
-                  width: 100%;
-                  overflow: hidden;
-                  word-wrap: break-word;
-                  text-align: left;
-                  
-                  .question-preview, .answer-preview {
-                    font-family: Arial, sans-serif;
-                    padding: 0.25rem;
-                    font-weight: normal;
-                    line-height: 1.2;
-                  }
-                  
-                  .divider {
-                    height: 1px;
-                    background-color: rgba(255, 255, 255, 0.5);
-                    margin: 0.25rem 0;
-                    width: 100%;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+// Container styles
+.jeopardy-container,
+.game-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 1500px;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-dark);
+  color: var(--text-color);
+  overflow: auto;
 }
+
+// Board layout
+.jeopardy-board {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+// Game title
+.game-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+}
+
+// Category cells
+.category,
+.category-cell {
+  background-color: var(--primary-color);
+  padding: 15px 10px;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  height: 100%;
+}
+
+// Question cells
+.cell,
+.question-cell {
+  background-color: var(--primary-light, #060ce9);
+  color: var(--accent-color, #ffd700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  border-radius: 8px;
+  min-height: 70px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  height: 100%;
+
+  &:hover {
+    background-color: var(--accent-color, #0717b5);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  &.selected {
+    background-color: var(--primary-dark);
+    color: var(--secondary-text);
+    cursor: default;
+    transform: none;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  &.empty-cell {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+  }
+}
+
+// Editor specific styles
+.editor-cell {
+  border: 1px dashed #ffd700;
   
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+// Cell content (for editable board)
+.cell-content {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  padding: 5px;
+  text-align: center;
+}
+
+.question-preview,
+.answer-preview {
+  font-size: 0.7rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.divider {
+  height: 1px;
+  background-color: rgba(255, 215, 0, 0.5);
+  margin: 3px 0;
+}
+
+/* Responsive styles */
+@media (max-width: 1080px) {
+  .game-title {
+    font-size: 2rem;
+    margin-bottom: 15px;
+  }
+  
+  .category,
+  .category-cell {
+    font-size: 0.9rem;
+    min-height: 50px !important;
+  }
+  
+  .cell,
+  .question-cell {
+    font-size: 1.5rem;
+    min-height: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .game-board,
+  .questions-grid {
+    gap: 5px;
+  }
+  
+  .game-title {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+  
+  .category,
+  .category-cell {
+    font-size: 0.8rem;
+    padding: 8px 5px;
+    min-height: 40px !important;
+  }
+  
+  .cell,
+  .question-cell {
+    font-size: 1.2rem;
+    min-height: 50px;
+  }
+  
+  .cell-content {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .jeopardy-container,
+  .game-container {
+    padding: 10px;
+  }
+  
+  .game-title {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+  
+  .category,
+  .category-cell {
+    font-size: 0.7rem;
+    padding: 5px 3px;
+    min-height: 30px !important;
+  }
+  
+  .cell,
+  .question-cell {
+    font-size: 1rem;
+    min-height: 40px;
+  }
+}
+
+@media (max-height: 800px) {
+  .game-title {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+  
+  .cell,
+  .question-cell {
+    font-size: 1.4rem;
+    min-height: 50px;
+  }
+  
+  .category,
+  .category-cell {
+    min-height: 40px !important;
+  }
+}
+
+@media (max-height: 600px) {
+  .game-title {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+  
+  .cell,
+  .question-cell {
+    font-size: 1.1rem;
+    min-height: 40px;
+  }
+  
+  .category,
+  .category-cell {
+    min-height: 30px !important;
+  }
+}
+
+@media (max-height: 500px) {
+  .game-title {
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+  }
+  
+  .jeopardy-container,
+  .game-container {
+    padding: 10px 20px;
+  }
+  
+  .cell,
+  .question-cell {
+    font-size: 1rem;
+    min-height: 30px;
+  }
+  
+  .category,
+  .category-cell {
+    min-height: 25px !important;
+    padding: 3px;
+  }
+}
+
+@media (max-height: 400px) {
+  .jeopardy-container,
+  .game-container {
+    padding: 5px 10px;
+  }
+  
+  .game-title {
+    font-size: 1.1rem;
+    margin-bottom: 3px;
+  }
+  
+  .cell,
+  .question-cell {
+    font-size: 0.8rem;
+    min-height: 25px;
+  }
+  
+  .category,
+  .category-cell {
+    font-size: 0.6rem;
+    min-height: 20px !important;
+    padding: 2px;
+  }
+  
+  .game-board,
+  .questions-grid {
+    gap: 3px;
+    margin-bottom: 5px;
+  }
+}
