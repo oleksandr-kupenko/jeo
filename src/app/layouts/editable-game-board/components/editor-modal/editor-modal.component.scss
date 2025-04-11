@@ -2,3 +2,12 @@ quill-editor {
   display: flex;
   flex-direction: column;
 }
+
+.modal-header,
+.modal-footer {
+  background-color: var(--middle-grey);
+}
+
+.modal-section-title {
+  color: var(--mirror-text-color);
+}

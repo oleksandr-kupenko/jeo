@@ -1,14 +1,24 @@
-import { Dialog, DialogRef } from '@angular/cdk/dialog';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Category, Game, Question, QuestionRow, QuestionUpdatedResponse } from '../game-board/interfaces/game-board.interfaces';
-import { EditableCategoryComponent } from './components/editable-category/editable-category.component';
-import { EditablePointsComponent } from './components/editable-points/editable-points.component';
-import { EditorModalComponent } from './components/editor-modal/editor-modal.component';
-import { EditableGameBoardService } from './editable-game-board.service';
-import { MediaPreviewPipe } from './media-preview.pipe';
-import { TruncateTextPipe } from './truncate-text.pipe';
+import {Dialog, DialogRef} from '@angular/cdk/dialog';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+import {
+  Category,
+  Game,
+  Question,
+  QuestionRow,
+  QuestionUpdatedResponse
+} from '../game-board/interfaces/game-board.interfaces';
+import {EditableCategoryComponent} from './components/editable-category/editable-category.component';
+import {EditablePointsComponent} from './components/editable-points/editable-points.component';
+import {EditorModalComponent} from './components/editor-modal/editor-modal.component';
+import {EditableGameBoardService} from './editable-game-board.service';
+import {MediaPreviewPipe} from './media-preview.pipe';
+import {TruncateTextPipe} from './truncate-text.pipe';
+import {SubHeaderComponent} from '../sub-header/sub-header.component';
+import {EditableTitleComponent} from './components/editable-title/editable-title.component';
+import {BrnTooltipContentDirective} from '@spartan-ng/brain/tooltip';
+import {HlmTooltipComponent, HlmTooltipTriggerDirective} from '@spartan-ng/ui-tooltip-helm';
 
 interface CellData {
   question?: Question;
@@ -26,12 +36,17 @@ interface BoardRow {
 @Component({
   selector: 'app-editable-game-board',
   standalone: true,
-  imports: [ 
-    FormsModule, 
-    EditableCategoryComponent, 
-    MediaPreviewPipe, 
+  imports: [
+    FormsModule,
+    EditableCategoryComponent,
+    MediaPreviewPipe,
     TruncateTextPipe,
-    EditablePointsComponent
+    EditablePointsComponent,
+    SubHeaderComponent,
+    EditableTitleComponent,
+    BrnTooltipContentDirective,
+    HlmTooltipComponent,
+    HlmTooltipTriggerDirective
   ],
   templateUrl: './editable-game-board.component.html',
   styleUrl: './editable-game-board.component.scss'
@@ -40,12 +55,11 @@ export class EditableGameBoardComponent implements OnInit {
   private dialog = inject(Dialog);
   private editableGameBoardService = inject(EditableGameBoardService);
   private route = inject(ActivatedRoute);
-  
+
   public game = signal<Game | null>(null);
   public categories = computed<Category[]>(() => this.game()?.categories!.sort((a, b) => a.order - b.order) ?? []);
-  public questionRows = computed<QuestionRow[]>(() => 
-    [...(this.game()?.questionRows ?? [])]
-      .sort((a, b) => a.order - b.order)
+  public questionRows = computed<QuestionRow[]>(() =>
+    [...(this.game()?.questionRows ?? [])].sort((a, b) => a.order - b.order)
   );
 
   // Готовая структура данных для доски
@@ -67,7 +81,7 @@ export class EditableGameBoardComponent implements OnInit {
       // Создаем ячейки для каждой категории в этой строке
       const cells = this.categories().map(category => {
         const question = row.questions.find(q => q.categoryId === category.id);
-        
+
         return {
           question,
           category,
@@ -108,12 +122,10 @@ export class EditableGameBoardComponent implements OnInit {
       console.log('data', data);
       const currentGame = this.game();
       if (!currentGame?.questionRows) return;
-      
+
       this.game.update(game => ({
         ...currentGame,
-        questionRows: currentGame!.questionRows!.map(row => 
-          row.id === rowId ? {...row, value: newValue} : row
-        )
+        questionRows: currentGame!.questionRows!.map(row => (row.id === rowId ? {...row, value: newValue} : row))
       }));
     });
   }
@@ -147,7 +159,7 @@ export class EditableGameBoardComponent implements OnInit {
 
           return {
             ...category,
-            questions: category.questions.map(question => 
+            questions: category.questions.map(question =>
               question.id === updatedQuestion.id ? updatedQuestion : question
             )
           };
@@ -159,9 +171,7 @@ export class EditableGameBoardComponent implements OnInit {
 
           return {
             ...row,
-            questions: row.questions.map(question => 
-              question.id === updatedQuestion.id ? updatedQuestion : question
-            )
+            questions: row.questions.map(question => (question.id === updatedQuestion.id ? updatedQuestion : question))
           };
         });
 
@@ -176,16 +186,23 @@ export class EditableGameBoardComponent implements OnInit {
   }
 
   public updateCategoryName(id: string, newName: string): void {
-    this.editableGameBoardService.updateCategoryName(id, {name: newName}).subscribe((updatedCategory) => {
+    this.editableGameBoardService.updateCategoryName(id, {name: newName}).subscribe(updatedCategory => {
       const currentGame = this.game();
       if (!currentGame || !currentGame.categories) return;
-      
+
       this.game.set({
         ...currentGame,
-        categories: currentGame.categories.map(category => 
-          category.id === id ? updatedCategory : category
-        )
+        categories: currentGame.categories.map(category => (category.id === id ? updatedCategory : category))
       });
+    });
+  }
+
+  public updateGameTitle(newTitle: string): void {
+    const currentGame = this.game();
+    if (!currentGame) return;
+
+    this.editableGameBoardService.updateGameTitle(currentGame.id, newTitle).subscribe(updatedGame => {
+      this.game.set(updatedGame);
     });
   }
 }

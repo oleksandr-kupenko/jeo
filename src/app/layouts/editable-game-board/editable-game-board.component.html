@@ -1,3 +1,9 @@
+<app-sub-header [backUrl]="'/games/list'">
+  <div class="current-game-title">
+    <app-editable-title [title]="game()?.title || 'Game Title'" (titleChange)="updateGameTitle($event)" />
+  </div>
+</app-sub-header>
+
 <div class="jeopardy-container h-full p-4">
   <div class="jeopardy-board h-full flex flex-col">
     <!-- Header row with empty cell for points column -->
@@ -18,31 +24,42 @@
       @for (row of boardRows(); track row.id) {
         <div class="questions-row grid grid-cols-[60px_repeat(5,1fr)]">
           <div class="points-cell flex items-center justify-center">
-            <app-editable-points
-              [points]="row.value"
-              (pointsChange)="onPointsChange(row.id, $event)"
-            />
+            <app-editable-points [points]="row.value" (pointsChange)="onPointsChange(row.id, $event)" />
           </div>
           @for (cell of row.cells; track cell.category.id) {
-            @if (cell.question) {
+            @if (cell.question?.question || cell.question?.answer) {
               <div
                 class="question-cell editor-cell"
                 [class.empty-cell]="cell.isEmpty"
-                (click)="onQuestionClick(cell.category, cell.question)"
+                (click)="onQuestionClick(cell.category, cell.question!)"
               >
-                <div class="cell-value">{{ row.value }}</div>
                 <div class="cell-content">
-                  <div class="question-preview">
-                    {{ cell.question.question | mediaPreview | truncateText: 50 }}
-                  </div>
+                  @let formattedQuestion = cell.question!.question | mediaPreview;
+                  <hlm-tooltip>
+                    <div class="question-preview" hlmTooltipTrigger>
+                      {{ formattedQuestion | truncateText: 50 }}
+                    </div>
+                    @if (formattedQuestion.length > 50) {
+                      <span *brnTooltipContent>{{ formattedQuestion }}</span>
+                    }
+                  </hlm-tooltip>
                   <div class="divider"></div>
-                  <div class="answer-preview">
-                    {{ cell.question.answer | mediaPreview | truncateText: 50 }}
-                  </div>
+                  @let formattedAnswer = cell.question!.answer | mediaPreview;
+                  <hlm-tooltip>
+                    <div class="answer-preview" hlmTooltipTrigger>
+                      {{ formattedAnswer | truncateText: 50 }}
+                    </div>
+                    @if (formattedAnswer.length > 50) {
+                      <span *brnTooltipContent>{{ formattedAnswer }}</span>
+                    }
+                  </hlm-tooltip>
                 </div>
               </div>
             } @else {
-              <div class="question-cell editor-cell empty-cell">
+              <div
+                class="question-cell editor-cell empty-cell"
+                (click)="onQuestionClick(cell.category, cell.question!)"
+              >
                 <div class="cell-value">{{ row.value }}</div>
               </div>
             }

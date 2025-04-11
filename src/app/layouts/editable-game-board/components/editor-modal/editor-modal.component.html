@@ -1,12 +1,12 @@
 <div class="w-full h-full bg-gray-200 flex flex-col rounded">
-  <div class="h-10 bg-gray-400 w-full flex items-center justify-between text-white p-5 text-lg rounded-t">
-    <span>{{ data.category }} for {{ "data.question.value" }}</span>
+  <div class="modal-header h-10 w-full flex items-center justify-between text-white p-5 text-lg rounded-t">
+    <span>{{ data.category }} for {{ 'data.question.value' }}</span>
     <span class="italic">Close without Saving [ESC]</span>
   </div>
 
   <div class="p-5 flex gap-10 h-full">
     <div class="w-1/2 flex flex-col">
-      <h3 class="text-lg mb-3">Question Prompt</h3>
+      <h3 class="modal-section-title text-lg mb-3">Question Prompt</h3>
       <div class="w-full h-[285px]">
         <quill-editor
           class="w-full h-full"
@@ -17,7 +17,7 @@
     </div>
 
     <div class="w-1/2 flex flex-col h-full">
-      <h3 class="text-lg mb-3">Correct Response</h3>
+      <h3 class="modal-section-title text-lg mb-3">Correct Response</h3>
       <div class="w-full h-[285px]">
         <quill-editor
           class="w-full h-full"
@@ -28,7 +28,7 @@
     </div>
   </div>
 
-  <div class="h-10 bg-gray-400 w-full flex items-center justify-between text-white p-5 text-lg rounded-b">
+  <div class="modal-footer h-10 w-full flex items-center justify-between text-white p-5 text-lg rounded-b">
     <button class="kdb" (click)="handleSave()">Save</button>
   </div>
 </div>

@@ -1,12 +1,15 @@
 :root {
-    --primary-color: #4527a0;
-    --primary-light: #5e35b1;
-    --primary-dark: #311b92;
-    --accent-color: #7c4dff;
-    --text-color: #ffffff;
-    --secondary-text: #e0e0e0;
-    --team-bg: #2c2157;
-    --team-active: #7c4dff;
-    --cell-hover: rgba(255, 255, 255, 0.1);
-    --button-hover: rgba(255, 255, 255, 0.2);
+  --primary-color: #4527a0;
+  --primary-light: #5e35b1;
+  --primary-dark: #311b92;
+  --accent-color: #7c4dff;
+  --text-color: #ffffff;
+  --mirror-text-color: #000000;
+  --secondary-text: #e0e0e0;
+  --team-bg: #2c2157;
+  --team-active: #7c4dff;
+  --cell-hover: rgba(255, 255, 255, 0.1);
+  --button-hover: rgba(255, 255, 255, 0.2);
+
+  --middle-grey: #67505e;
 }

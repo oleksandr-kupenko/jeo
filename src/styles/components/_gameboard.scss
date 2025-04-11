@@ -85,14 +85,14 @@
   &.empty-cell {
     background-color: rgba(0, 0, 0, 0.3);
     color: rgba(255, 255, 255, 0.5);
-    cursor: not-allowed;
+    cursor: pointer;
   }
 }
 
 // Editor specific styles
 .editor-cell {
   border: 1px dashed #ffd700;
-  
+
   &:hover {
     transform: scale(1.02);
   }
@@ -112,6 +112,7 @@
   font-size: 0.7rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--text-color);
 }
 
 .divider {
@@ -126,13 +127,13 @@
     font-size: 2rem;
     margin-bottom: 15px;
   }
-  
+
   .category,
   .category-cell {
     font-size: 0.9rem;
     min-height: 50px !important;
   }
-  
+
   .cell,
   .question-cell {
     font-size: 1.5rem;
@@ -145,25 +146,25 @@
   .questions-grid {
     gap: 5px;
   }
-  
+
   .game-title {
     font-size: 1.8rem;
     margin-bottom: 10px;
   }
-  
+
   .category,
   .category-cell {
     font-size: 0.8rem;
     padding: 8px 5px;
     min-height: 40px !important;
   }
-  
+
   .cell,
   .question-cell {
     font-size: 1.2rem;
     min-height: 50px;
   }
-  
+
   .cell-content {
     font-size: 0.6rem;
   }
@@ -174,19 +175,19 @@
   .game-container {
     padding: 10px;
   }
-  
+
   .game-title {
     font-size: 1.5rem;
     margin-bottom: 8px;
   }
-  
+
   .category,
   .category-cell {
     font-size: 0.7rem;
     padding: 5px 3px;
     min-height: 30px !important;
   }
-  
+
   .cell,
   .question-cell {
     font-size: 1rem;
@@ -199,13 +200,13 @@
     font-size: 1.8rem;
     margin-bottom: 10px;
   }
-  
+
   .cell,
   .question-cell {
     font-size: 1.4rem;
     min-height: 50px;
   }
-  
+
   .category,
   .category-cell {
     min-height: 40px !important;
@@ -217,13 +218,13 @@
     font-size: 1.5rem;
     margin-bottom: 8px;
   }
-  
+
   .cell,
   .question-cell {
     font-size: 1.1rem;
     min-height: 40px;
   }
-  
+
   .category,
   .category-cell {
     min-height: 30px !important;
@@ -235,18 +236,18 @@
     font-size: 1.3rem;
     margin-bottom: 5px;
   }
-  
+
   .jeopardy-container,
   .game-container {
     padding: 10px 20px;
   }
-  
+
   .cell,
   .question-cell {
     font-size: 1rem;
     min-height: 30px;
   }
-  
+
   .category,
   .category-cell {
     min-height: 25px !important;
@@ -259,25 +260,25 @@
   .game-container {
     padding: 5px 10px;
   }
-  
+
   .game-title {
     font-size: 1.1rem;
     margin-bottom: 3px;
   }
-  
+
   .cell,
   .question-cell {
     font-size: 0.8rem;
     min-height: 25px;
   }
-  
+
   .category,
   .category-cell {
     font-size: 0.6rem;
     min-height: 20px !important;
     padding: 2px;
   }
-  
+
   .game-board,
   .questions-grid {
     gap: 3px;

@@ -20,4 +20,14 @@
   border-radius: 8px;
   font-weight: 600;
   padding: 5px;
-} 
+}
+
+.question-preview,
+.answer-preview {
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+    cursor: pointer;
+  }
+}

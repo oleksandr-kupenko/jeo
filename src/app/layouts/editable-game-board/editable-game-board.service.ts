@@ -1,6 +1,12 @@
 import {inject, Injectable, resource} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Category, Game, Question, QuestionUpdate, QuestionUpdatedResponse} from '../game-board/interfaces/game-board.interfaces';
+import {
+  Category,
+  Game,
+  Question,
+  QuestionUpdate,
+  QuestionUpdatedResponse
+} from '../game-board/interfaces/game-board.interfaces';
 import {environment} from '../../../environments/environment.development';
 import {HttpClient} from '@angular/common/http';
 
@@ -14,9 +20,7 @@ export class EditableGameBoardService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-
-  constructor() {
-  }
+  constructor() {}
 
   public createGame(title: string): Observable<Game> {
     return this.http.post<Game>(`${this.baseUrl}/api/games`, {title});
@@ -26,8 +30,11 @@ export class EditableGameBoardService {
     return this.http.get<Game>(`${this.baseUrl}/api/games/${id}`);
   }
 
+  public updateGameTitle(gameId: string, title: string): Observable<Game> {
+    return this.http.patch<Game>(`${this.baseUrl}/api/games/${gameId}`, {title});
+  }
 
-  updateCategoryName(categoryId: string, data: {name?: string, order?: number}): Observable<Category> {
+  updateCategoryName(categoryId: string, data: {name?: string; order?: number}): Observable<Category> {
     return this.http.put<Category>(`${this.baseUrl}/api/categories/${categoryId}`, data);
   }
 

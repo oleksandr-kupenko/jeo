@@ -1,27 +1,26 @@
 import {Component, input, output, signal, ElementRef, viewChild, effect} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
 @Component({
-  selector: 'app-editable-category',
+  selector: 'app-editable-title',
   standalone: true,
   imports: [FormsModule],
   template: `
-    <div class="category-header" [class.editing]="isEditing()" (click)="startEditing()">
+    <div class="title-header" [class.editing]="isEditing()" (click)="startEditing()">
       @if (isEditing()) {
         <input
-          #categoryInput
+          #titleInput
           type="text"
-          [ngModel]="categoryName()"
-          (ngModelChange)="updateCategoryName($event)"
+          [ngModel]="title()"
+          (ngModelChange)="updateTitle($event)"
           (blur)="finishEditing()"
           (keydown.enter)="finishEditing()"
-          class="category-input"
+          class="title-input"
         />
       } @else {
-        <div class="category-text w-full text-center">
+        <div class="title-text w-full text-center">
           <span>
-            {{ categoryName() }}
+            {{ title() }}
           </span>
         </div>
       }
@@ -34,7 +33,7 @@ import {FormsModule} from '@angular/forms';
       height: 100%;
     }
 
-    .category-header {
+    .title-header {
       width: 100%;
       height: 100%;
       display: flex;
@@ -43,13 +42,13 @@ import {FormsModule} from '@angular/forms';
       cursor: pointer;
     }
 
-    .category-text {
+    .title-text {
       width: 100%;
       text-align: center;
       font-weight: bold;
     }
 
-    .category-input {
+    .title-input {
       width: 90%;
       background: transparent;
       border: none;
@@ -65,19 +64,19 @@ import {FormsModule} from '@angular/forms';
     }
   `
 })
-export class EditableCategoryComponent {
-  public categoryName = input<string>('');
-  public categoryNameChange = output<string>();
+export class EditableTitleComponent {
+  public title = input<string>('');
+  public titleChange = output<string>();
   public isEditing = signal<boolean>(false);
-  private categoryInput = viewChild<ElementRef>('categoryInput');
+  private titleInput = viewChild<ElementRef>('titleInput');
 
-  private newName = signal<string>('');
+  private newTitle = signal<string>('');
 
   constructor() {
     effect(() => {
-      if (this.isEditing() && this.categoryInput()) {
+      if (this.isEditing() && this.titleInput()) {
         setTimeout(() => {
-          this.categoryInput()?.nativeElement?.focus();
+          this.titleInput()?.nativeElement?.focus();
         });
       }
     });
@@ -85,17 +84,17 @@ export class EditableCategoryComponent {
 
   public startEditing(): void {
     this.isEditing.set(true);
-    this.newName.set(this.categoryName());
+    this.newTitle.set(this.title());
   }
 
   public finishEditing(): void {
     this.isEditing.set(false);
-    if (this.newName()) {
-      this.categoryNameChange.emit(this.newName());
+    if (this.newTitle()) {
+      this.titleChange.emit(this.newTitle());
     }
   }
 
-  public updateCategoryName(newValue: string): void {
-    this.newName.set(newValue);
+  public updateTitle(newValue: string): void {
+    this.newTitle.set(newValue);
   }
 }
