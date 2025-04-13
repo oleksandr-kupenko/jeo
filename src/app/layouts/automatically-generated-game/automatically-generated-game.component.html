@@ -1,0 +1,102 @@
+<div class="flex items-center justify-center min-h-screen flex-col p-6 text-white">
+  <h2 class="text-2xl font-bold mb-6">AI Game Generation</h2>
+
+  <form [formGroup]="gameForm" (ngSubmit)="onSubmit()" class="w-full max-w-2xl">
+    <div class="mb-4">
+      <div class="flex items-center mb-2">
+        <hlm-checkbox [formControl]="autoGenerateCategories" (click)="toggleAutoGenerate()" class="mr-2">
+        </hlm-checkbox>
+        <span class="text-sm">Auto-generate categories</span>
+      </div>
+      <div class="text-sm text-muted-foreground mt-1">
+        @if (autoGenerateCategories.value) {
+          <span class="text-xs text-gray-400">Categories will be generated automatically. Main Theme is required.</span>
+        } @else {
+          <span class="text-xs text-gray-400">You need to specify categories manually. Main Theme is optional.</span>
+        }
+      </div>
+    </div>
+
+    <div class="mb-4 relative pb-6">
+      <label hlmLabel class="block text-sm font-medium mb-1"> Categories <span class="text-red-500">*</span> </label>
+      <input
+        hlmInput
+        formControlName="categories"
+        [class]="'w-full ' + (autoGenerateCategories.value ? 'opacity-50' : '')"
+        [attr.disabled]="autoGenerateCategories.value ? true : null"
+        placeholder="History, Science, Art, Geography, Sports"
+      />
+      @if (
+        gameForm.get('categories')?.invalid &&
+        (gameForm.get('categories')?.dirty || gameForm.get('categories')?.touched)
+      ) {
+        <div class="text-red-500 text-sm mt-1 absolute">
+          @if (gameForm.get('categories')?.errors?.['required']) {
+            <span>Categories are required</span>
+          }
+          @if (gameForm.get('categories')?.errors?.['categoriesCount']) {
+            <span>Must have between 2 and 10 categories</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="mb-4 relative pb-6">
+      <label hlmLabel class="block text-sm font-medium mb-1">
+        Main Theme
+        @if (autoGenerateCategories.value) {
+          <span class="text-red-500">*</span>
+        }
+      </label>
+      <input hlmInput formControlName="theme" class="w-full" placeholder="Enter the main theme for the game" />
+      @if (gameForm.get('theme')?.invalid && (gameForm.get('theme')?.dirty || gameForm.get('theme')?.touched)) {
+        <div class="text-red-500 text-sm mt-1 absolute">
+          <span>Theme is required when auto-generating categories</span>
+        </div>
+      }
+    </div>
+
+    <div class="mb-4">
+      <label hlmLabel class="block text-sm font-medium mb-1">Details (optional)</label>
+      <textarea
+        hlmInput
+        formControlName="details"
+        class="w-full h-24 min-h-[80px]"
+        placeholder="Additional details for question generation"
+      ></textarea>
+    </div>
+
+    <div class="mb-4">
+      <label hlmLabel class="block text-sm font-medium mb-1">Example Questions (optional)</label>
+      <textarea
+        hlmInput
+        formControlName="exampleQuestions"
+        class="w-full h-24 min-h-[80px]"
+        placeholder="Example questions to better understand the style"
+      ></textarea>
+    </div>
+
+    <div class="mb-6">
+      <h3 class="text-lg font-medium mb-2">Settings</h3>
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center">
+          <hlm-checkbox formControlName="allowImages" class="mr-2"></hlm-checkbox>
+          <span>Allow images</span>
+        </div>
+        <div class="flex items-center">
+          <hlm-checkbox formControlName="allowVideos" class="mr-2"></hlm-checkbox>
+          <span>Allow videos</span>
+        </div>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      hlmBtn
+      class="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+      [disabled]="gameForm.invalid"
+    >
+      Generate Game
+    </button>
+  </form>
+</div>
