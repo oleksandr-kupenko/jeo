@@ -1,14 +1,9 @@
 import {inject, Injectable, resource} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {
-  Category,
-  Game,
-  Question,
-  QuestionUpdate,
-  QuestionUpdatedResponse
-} from '../game-board/interfaces/game-board.interfaces';
 import {environment} from '../../../environments/environment.development';
 import {HttpClient} from '@angular/common/http';
+import {Category, Game, Question} from '@core/interfaces/game.interfaces';
+import {QuestionUpdate, QuestionUpdatedResponse} from './interfaces/editable-game.interface';
 
 const STORAGE_KEYS = {
   CATEGORIES: 'game_categories',

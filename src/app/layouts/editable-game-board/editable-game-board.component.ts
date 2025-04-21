@@ -2,13 +2,7 @@ import {Dialog, DialogRef} from '@angular/cdk/dialog';
 import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
-import {
-  Category,
-  Game,
-  Question,
-  QuestionRow,
-  QuestionUpdatedResponse
-} from '../game-board/interfaces/game-board.interfaces';
+
 import {EditableCategoryComponent} from './components/editable-category/editable-category.component';
 import {EditablePointsComponent} from './components/editable-points/editable-points.component';
 import {EditorModalComponent} from './components/editor-modal/editor-modal.component';
@@ -19,6 +13,8 @@ import {SubHeaderComponent} from '../sub-header/sub-header.component';
 import {EditableTitleComponent} from './components/editable-title/editable-title.component';
 import {BrnTooltipContentDirective} from '@spartan-ng/brain/tooltip';
 import {HlmTooltipComponent, HlmTooltipTriggerDirective} from '@spartan-ng/ui-tooltip-helm';
+import {Category, Game, Question, QuestionRow} from '@core/interfaces/game.interfaces';
+import {QuestionUpdatedResponse} from './interfaces/editable-game.interface';
 
 interface CellData {
   question?: Question;

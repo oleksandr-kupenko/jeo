@@ -37,6 +37,10 @@ button {
     @apply bg-blue-600 text-white hover:bg-blue-700;
   }
 
+  .btn-secondary {
+    @apply bg-gray-500 text-white hover:bg-gray-600;
+  }
+
   .btn-success {
     @apply bg-green-600 text-white hover:bg-green-700;
   }

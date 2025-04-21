@@ -1,9 +1,9 @@
 import {Component, computed, HostListener, Inject, OnInit, signal} from '@angular/core';
 import {DIALOG_DATA, DialogRef} from '@angular/cdk/dialog';
-import {Question} from '../../interfaces/game-board.interfaces';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {CurrentQuestionService} from '../../../../services/current-question.service';
+import {Question} from '@core/interfaces/game.interfaces';
 
 @Component({
   selector: 'app-question-modal',

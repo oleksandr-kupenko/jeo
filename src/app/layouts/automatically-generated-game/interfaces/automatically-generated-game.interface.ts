@@ -1,33 +1,40 @@
+import {Category, Game} from '@core/interfaces/game.interfaces';
+
 export interface AutomaticallyGeneratedGameForm {
   theme: string;
-  categories: string;
+  categories: string[];
   details: string;
   exampleQuestions: string;
   allowImages: boolean;
   allowVideos: boolean;
 }
 
-// export interface GeneratedQuestion {
-//   id: string;
-//   question: string;
-//   answer: string;
-//   value: number;
-//   categoryId: string;
-//   mediaUrl?: string;
-//   mediaType?: 'image' | 'video';
-// }
+export interface StartAiGenerationResponse {
+  generationId: string;
+  message: string;
+  success: boolean;
+}
 
-// export interface GeneratedCategory {
-//   id: string;
-//   name: string;
-//   questions: GeneratedQuestion[];
-// }
+export type AiGameGenerationStatusResponse =
+  | AiGameGenerationPending
+  | AiGameGenerationCompleted
+  | AiGameGenerationFailed;
 
-// export interface GeneratedGame {
-//   id: string;
-//   title: string;
-//   categories: GeneratedCategory[];
-//   createdAt: Date;
-//   allowImages: boolean;
-//   allowVideos: boolean;
-// }
+export interface AiGameGenerationPending {
+  success: true;
+  status: 'pending';
+  id: 'string';
+}
+
+export interface AiGameGenerationCompleted {
+  success: true;
+  status: 'completed';
+  id: 'string';
+  data: {categories: Category[]; gameId: Game};
+}
+
+export interface AiGameGenerationFailed {
+  success: false;
+  status: 'failed';
+  message: string;
+}

@@ -1,6 +1,12 @@
 <div class="flex items-center justify-center min-h-screen flex-col p-6 text-white">
   <h2 class="text-2xl font-bold mb-6">AI Game Generation</h2>
 
+  @if (isLoading()) {
+    <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  }
+
   <form [formGroup]="gameForm" (ngSubmit)="onSubmit()" class="w-full max-w-2xl">
     <div class="mb-4">
       <div class="flex items-center mb-2">
@@ -17,27 +23,84 @@
       </div>
     </div>
 
-    <div class="mb-4 relative pb-6">
-      <label hlmLabel class="block text-sm font-medium mb-1"> Categories <span class="text-red-500">*</span> </label>
-      <input
-        hlmInput
-        formControlName="categories"
-        [class]="'w-full ' + (autoGenerateCategories.value ? 'opacity-50' : '')"
-        [attr.disabled]="autoGenerateCategories.value ? true : null"
-        placeholder="History, Science, Art, Geography, Sports"
-      />
+    <div class="mb-4 relative pb-6" formArrayName="categories">
+      <label hlmLabel class="block text-sm font-medium mb-1">
+        Categories <span class="text-red-500">*</span>
+        <span class="text-xs text-gray-400 ml-1">({{ categories.length }}/{{ maxCategories }})</span>
+      </label>
+
+      <div class="flex flex-wrap gap-2 mb-2 min-h-8">
+        @if (categories.length === 0) {
+          <div class="text-gray-400 text-sm">No categories added yet</div>
+        } @else {
+          @for (category of categories.controls; track $index) {
+            <div
+              class="bg-primary/20 rounded-full px-3 py-1 flex items-center text-sm border border-primary/30 hover:bg-primary/30 transition-colors"
+            >
+              {{ category.value }}
+              <button
+                type="button"
+                class="ml-1 text-gray-400 hover:text-white focus:outline-none"
+                [disabled]="autoGenerateCategories.value"
+                (click)="removeCategory($index)"
+                aria-label="Remove category"
+              >
+                ×
+              </button>
+            </div>
+          }
+        }
+      </div>
+
+      <div class="flex items-center">
+        <input
+          hlmInput
+          [ngModel]="newCategory()"
+          (ngModelChange)="newCategory.set($event)"
+          [ngModelOptions]="{standalone: true}"
+          [disabled]="autoGenerateCategories.value || categories.length >= maxCategories"
+          (keydown)="handleKeydown($event)"
+          placeholder="Type category name and press Enter"
+          class="w-full"
+          maxlength="30"
+          minlength="2"
+        />
+        <button
+          type="button"
+          hlmBtn
+          class="ml-2 min-w-12 bg-primary text-primary-foreground hover:bg-primary/90"
+          [disabled]="
+            autoGenerateCategories.value ||
+            !newCategory() ||
+            categories.length >= maxCategories ||
+            newCategory().length < minCategoryLength
+          "
+          (click)="addCategory()"
+        >
+          Add
+        </button>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="text-orange-500 text-sm mt-1">
+          {{ errorMessage() }}
+        </div>
+      }
+
       @if (
         gameForm.get('categories')?.invalid &&
-        (gameForm.get('categories')?.dirty || gameForm.get('categories')?.touched)
+        (gameForm.get('categories')?.dirty || gameForm.get('categories')?.touched) &&
+        !errorMessage()
       ) {
-        <div class="text-red-500 text-sm mt-1 absolute">
-          @if (gameForm.get('categories')?.errors?.['required']) {
-            <span>Categories are required</span>
-          }
-          @if (gameForm.get('categories')?.errors?.['categoriesCount']) {
-            <span>Must have between 2 and 10 categories</span>
-          }
+        <div class="text-red-500 text-sm mt-1">
+          {{ getCategoriesError() }}
         </div>
+      }
+
+      @if (
+        categories.length < 2 && !autoGenerateCategories.value && gameForm.get('categories')?.touched && !errorMessage()
+      ) {
+        <div class="text-red-500 text-sm mt-1 absolute bottom-0 left-0">Must have at least 2 categories</div>
       }
     </div>
 
@@ -90,13 +153,15 @@
       </div>
     </div>
 
-    <button
-      type="submit"
-      hlmBtn
-      class="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-      [disabled]="gameForm.invalid"
-    >
-      Generate Game
+    <button type="submit" hlmBtn class="w-full" [disabled]="isLoading()">
+      @if (isLoading()) {
+        <span class="flex items-center justify-center">
+          <span class="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent rounded-full"></span>
+          Generating game...
+        </span>
+      } @else {
+        Generate Game
+      }
     </button>
   </form>
 </div>

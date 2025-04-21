@@ -1,19 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   presets: [require('@spartan-ng/brain/hlm-tailwind-preset')],
-  content: [
-    './src/**/*.{html,ts}',
-    './libs/**/*.{html,ts}',
-    './node_modules/@spartan-ng/**/*.{html,ts,js,mjs}',
-  ],
+  content: ['./src/**/*.{html,ts}', './libs/**/*.{html,ts}', './node_modules/@spartan-ng/**/*.{html,ts,js,mjs}'],
   theme: {
-    extend: {},
+    extend: {}
   },
   plugins: [],
-  
-  safelist: [
-    'btn',
-    'btn-primary',
-    'btn-success'
-  ]
+
+  safelist: ['btn', 'btn-primary', 'btn-secondary', 'btn-success']
 };
