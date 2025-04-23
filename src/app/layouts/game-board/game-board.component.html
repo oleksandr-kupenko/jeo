@@ -19,12 +19,12 @@
             [class.empty-cell]="cell.isEmpty"
             (click)="!cell.isEmpty && !cell.isAnswered && onQuestionClick(cell.category, cell.question!)"
           >
-            <div>{{ row.value }}</div>
+            <span>{{ row.value }}</span>
           </div>
         }
       }
     </div>
   </div>
-  
+
   <app-players></app-players>
 </div>
