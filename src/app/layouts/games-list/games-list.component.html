@@ -1,24 +1,99 @@
-<app-sub-header [backUrl]="'/'"> Game List </app-sub-header>
+<app-sub-header [backUrl]="'/'">Game List</app-sub-header>
 
-<div class="flex items-center justify-center h-full w-full">
-  <ul class="m-auto">
-    @for (game of gameList(); track game.id) {
-      <li class="mb-2">
-        <div class="flex gap-5 items-center justify-center">
-          <a
-            [routerLink]="'/games/sessions/new/' + game.id"
-            class="block w-80 p-3 border-2 text-white border-yellow-400 rounded hover:bg-yellow-100 hover:text-black cursor-pointer transition-colors"
+<div class="flex flex-col items-center justify-start py-8 px-4 w-full">
+  <h2 class="text-3xl font-bold mb-8 text-white">Your Jeopardy Games</h2>
+
+  <div class="w-full max-w-3xl">
+    <ul class="space-y-4 w-full">
+      @for (game of gameList(); track game.id; let idx = $index) {
+        <li class="w-full animate-fade-in" style="animation-delay: calc(idx * 0.05s)">
+          <div
+            class="bg-gradient-to-r from-indigo-700 to-indigo-800 rounded-xl shadow-lg overflow-hidden hover:shadow-indigo-500/20 hover:shadow-xl transition-all duration-300"
           >
-            {{ game.title }}</a
-          >
-          <button [routerLink]="'/game/edit/' + game.id" mat-mini-fab>
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button (click)="handleDeleteGame(game.id)" mat-mini-fab>
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-      </li>
+            <div class="flex items-center p-1">
+              <!-- Game title area -->
+              <a
+                [routerLink]="'/games/sessions/new/' + game.id"
+                class="flex-1 p-4 group flex items-center text-white hover:bg-indigo-600/30 rounded-l-xl transition-colors cursor-pointer"
+              >
+                <div class="flex bg-yellow-500/20 p-3 mr-4 rounded-full flex-shrink-0">
+                  <ng-icon hlm size="lg" name="lucideGamepad" />
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-xl font-semibold group-hover:text-yellow-300 transition-colors">{{ game.title }}</h3>
+                  <p class="text-indigo-200 text-sm">Tap to start a new session</p>
+                </div>
+                <div class="flex items-center justify-center text-indigo-300 mr-2">
+                  <ng-icon hlm size="base" name="lucideChevronRight" />
+                </div>
+              </a>
+
+              <!-- Action buttons area -->
+              <div class="flex gap-2 p-2">
+                <hlm-tooltip>
+                  <button
+                    hlmTooltipTrigger
+                    [routerLink]="'/game/edit/' + game.id"
+                    class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 p-2 rounded-lg text-white shadow-md hover:shadow-blue-500/50 transition-all"
+                  >
+                    <ng-icon hlm size="sm" name="lucidePencil" />
+                    <span *brnTooltipContent>Edit game (questions and answers)</span>
+                  </button>
+                </hlm-tooltip>
+                <hlm-tooltip>
+                  <button
+                    hlmTooltipTrigger
+                    (click)="handleDeleteGame(game.id)"
+                    class="flex items-center justify-center bg-red-500 hover:bg-red-600 p-2 rounded-lg text-white shadow-md hover:shadow-red-500/50 transition-all"
+                  >
+                    <ng-icon hlm size="sm" name="lucideTrash2" />
+                    <span *brnTooltipContent> Delete game</span>
+                  </button>
+                </hlm-tooltip>
+              </div>
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+
+    <!-- Empty state message -->
+    @if (gameList().length === 0) {
+      <div
+        class="flex flex-col items-center justify-center text-center p-10 bg-indigo-800/30 rounded-xl border border-indigo-700"
+      >
+        <ng-icon hlm size="xl" name="lucideCirclePlus" />
+        <h3 class="text-xl font-semibold text-white mb-2">No Games Yet</h3>
+        <p class="text-indigo-300 mb-6">Create your first Jeopardy game to get started</p>
+        <a
+          routerLink="/games/new"
+          class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 rounded-lg text-white font-medium hover:shadow-lg hover:shadow-blue-500/30 transition-all"
+        >
+          Create New Game
+        </a>
+      </div>
     }
-  </ul>
+  </div>
+
+  <!-- Floating action button to create a new game -->
+  <a
+    routerLink="/games/new"
+    class="fixed bottom-6 right-6 bg-gradient-to-r from-blue-500 to-blue-700 p-4 rounded-full shadow-lg hover:shadow-blue-500/50 hover:scale-110 transition-all duration-300"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="text-white"
+    >
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+  </a>
 </div>

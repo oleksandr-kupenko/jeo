@@ -36,4 +36,8 @@ export class GameSessionService {
   updateQuestionStatus(questionId: string): Observable<Question> {
     return this.http.patch<Question>(`${this.baseUrl}/api/questions/${questionId}/answered`, {});
   }
+
+  stopSession(gameSessionId: string): Observable<GameSession> {
+    return this.http.patch<GameSession>(`${this.baseUrl}/api/game-sessions/${gameSessionId}/end`, {});
+  }
 }

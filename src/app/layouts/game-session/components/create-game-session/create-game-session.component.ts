@@ -17,6 +17,8 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ActivatedRoute, Router} from '@angular/router';
 import {GameSessionService} from '../../game-session.service';
 import {NewGameSessionParams} from '../../interfaces/game-session.interface';
+import {SubHeaderComponent} from '../../../sub-header/sub-header.component';
+import {EditableTitleComponent} from '../../../editable-game-board/components/editable-title/editable-title.component';
 
 interface GameSessionFormControls {
   name: FormControl<string>;
@@ -28,8 +30,21 @@ interface GameSessionFormControls {
 @Component({
   selector: 'app-create-game-session',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HlmButtonDirective, HlmInputDirective, HlmLabelDirective],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    HlmButtonDirective,
+    HlmInputDirective,
+    HlmLabelDirective,
+    SubHeaderComponent,
+    EditableTitleComponent
+  ],
   template: `
+    <app-sub-header [backUrl]="'games/list'">
+      <div class="current-game-title">
+        <app-editable-title [title]="'Start new session game'" />
+      </div>
+    </app-sub-header>
     <div class="flex items-center justify-center min-h-screen flex-col p-6 text-white">
       <div class="w-full max-w-md border-2 border-gray-700 p-6 rounded-lg">
         <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()" class="w-full">

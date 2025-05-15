@@ -1,29 +1,77 @@
-<app-sub-header [backUrl]="'/'">
-  Game Sessions
-</app-sub-header>
+<app-sub-header [backUrl]="'/'">Game Sessions</app-sub-header>
 
-<div class="flex items-center justify-center h-full w-full">
-  <ul class="m-auto">
-    @for(sesion of sessionList(); track sesion.id) {
+<div class="flex flex-col items-center justify-start py-8 px-4 w-full">
+  <h2 class="text-3xl font-bold mb-8 text-white">Continue Your Games</h2>
 
-        <li class="mb-2">
-          <div class="flex gap-5 items-center justify-center">
-          <a [routerLink]="'/games/sessions/' + sesion.id" class="block w-80 p-3  border-2 text-white border-yellow-400 rounded hover:bg-yellow-100 hover:text-black cursor-pointer transition-colors">
-            {{sesion.name}}</a>
-            <button
-              [routerLink]="'/game/edit/' + sesion.id"
-              mat-mini-fab>
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-            (click)="handleDeleteSession(sesion.id)"
-            mat-mini-fab>
-            <mat-icon>delete</mat-icon>
-          </button>
+  <div class="w-full max-w-3xl">
+    <ul class="space-y-4 w-full">
+      @for (sesion of sessionList(); track sesion.id; let idx = $index) {
+        <li class="w-full animate-fade-in" style="animation-delay: calc(idx * 0.05s)">
+          <div
+            class="bg-gradient-to-r from-green-700 to-green-800 rounded-xl shadow-lg overflow-hidden hover:shadow-green-500/20 hover:shadow-xl transition-all duration-300"
+          >
+            <div class="flex items-center p-1">
+              <!-- Session title area -->
+              <a
+                [routerLink]="'/games/sessions/' + sesion.id"
+                class="flex-1 p-4 group flex items-center text-white hover:bg-green-600/30 rounded-l-xl transition-colors cursor-pointer"
+              >
+                <div class="flex bg-emerald-500/20 p-3 mr-4 rounded-full flex-shrink-0">
+                  <ng-icon hlm size="lg" name="lucideGamepad2" />
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-xl font-semibold group-hover:text-yellow-300 transition-colors">
+                    {{ sesion.name }}
+                  </h3>
+                  <p class="text-green-200 text-sm">Tap to continue this session</p>
+                </div>
+                <div class="flex items-center justify-center text-green-300 mr-2">
+                  <ng-icon hlm size="base" name="lucideChevronRight" />
+                </div>
+              </a>
+
+              <!-- Action buttons area -->
+              <div class="flex gap-2 p-2">
+                <!--                <button-->
+                <!--                  [routerLink]="'/game/edit/' + sesion.id"-->
+                <!--                  class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 p-2 rounded-lg text-white shadow-md hover:shadow-blue-500/50 transition-all"-->
+                <!--                >-->
+                <!--                  <ng-icon hlm size="sm" name="lucidePencil" strokeWidth="2" />-->
+                <!--                </button>-->
+                <hlm-tooltip>
+                  <button
+                    hlmTooltipTrigger
+                    (click)="handleStopSession(sesion.id)"
+                    class="flex items-center justify-center bg-red-500 hover:bg-red-600 p-2 rounded-lg text-white shadow-md hover:shadow-red-500/50 transition-all"
+                  >
+                    <ng-icon hlm size="sm" name="lucideSquare" strokeWidth="2" />
+                    <span *brnTooltipContent>Stop the game (delete the game session)</span>
+                  </button>
+                </hlm-tooltip>
+              </div>
+            </div>
           </div>
         </li>
+      }
+    </ul>
 
-
+    <!-- Empty state message -->
+    @if (sessionList().length === 0) {
+      <div
+        class="flex flex-col items-center justify-center text-center p-10 bg-green-800/30 rounded-xl border border-green-700"
+      >
+        <ng-icon hlm size="xl" name="lucideInfo" />
+        <h3 class="text-xl font-semibold text-white mb-2">No Active Sessions</h3>
+        <p class="text-green-300 mb-6">Start a new game session to continue later</p>
+        <a
+          routerLink="/games/list"
+          class="px-6 py-2 bg-gradient-to-r from-green-500 to-green-700 rounded-lg text-white font-medium hover:shadow-lg hover:shadow-green-500/30 transition-all"
+        >
+          See All Games
+        </a>
+      </div>
     }
-  </ul>
+  </div>
+
+  <!-- Floating action button to start a new session -->
 </div>

@@ -1,20 +1,46 @@
 import {ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
 import {provideRouter} from '@angular/router';
-
+import {
+  lucidePlay,
+  lucidePlus,
+  lucideList,
+  lucidePencil,
+  lucideTrash,
+  lucideTrash2,
+  lucideGamepad2,
+  lucideChevronRight,
+  lucideSquare,
+  lucideGamepad,
+  lucideCirclePlus,
+  lucideInfo
+} from '@ng-icons/lucide';
 import {routes} from './app.routes';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 import {provideQuillConfig} from 'ngx-quill';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {authInterceptor, errorInterceptor} from './core/interceptors';
+import {provideIcons} from '@ng-icons/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideIcons({
+      lucidePlay,
+      lucidePlus,
+      lucideList,
+      lucidePencil,
+      lucideTrash,
+      lucideTrash2,
+      lucideGamepad2,
+      lucideChevronRight,
+      lucideSquare,
+      lucideGamepad,
+      lucideCirclePlus,
+      lucideInfo
+    }),
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideHttpClient(
-      withInterceptors([authInterceptor, errorInterceptor])
-    ),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideQuillConfig({
       modules: {
         syntax: true,

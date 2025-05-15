@@ -8,6 +8,7 @@ import {ActivatedRoute} from '@angular/router';
 import {GameSessionService} from '../game-session/game-session.service';
 import {Category, Game, Question, QuestionRow} from '@core/interfaces/game.interfaces';
 import {GameSession} from '@core/interfaces/game-session.interfaces';
+import {WebSocketService} from '@core/services/websocket.service';
 
 interface CellData {
   question?: Question;
@@ -36,6 +37,7 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
   private currentQuestionService = inject(CurrentQuestionService);
   private route = inject(ActivatedRoute);
   private elementRef = inject(ElementRef);
+  private socketService = inject(WebSocketService);
 
   public game = signal<Game | null>(null);
   public categories = computed<Category[]>(() => this.game()?.categories?.sort((a, b) => a.order - b.order) ?? []);
@@ -52,11 +54,6 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
     if (!game || !questionRows || !categories || !questionRows.length || !categories.length) {
       return [];
     }
-
-    // Диагностическое логирование
-    console.log('Game:', game);
-    console.log('Categories count:', categories.length);
-    console.log('QuestionRows count:', questionRows.length);
 
     // Создаем словарь всех вопросов для быстрого доступа
     const allQuestions = new Map<string, Question>();
@@ -184,10 +181,6 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
     // Применяем высоту к категориям и ячейкам
     categoryEls.forEach((el: Element) => ((el as HTMLElement).style.height = `${cellHeight}px`));
     cellEls.forEach((el: Element) => ((el as HTMLElement).style.height = `${cellHeight}px`));
-
-    console.log(
-      `Adjusted board: container=${containerHeight}, title=${titleHeight}, players=${playersHeight}, cell=${cellHeight}, availableHeight=${availableHeight}, rowCount=${rowCount}`
-    );
   }
 
   public ngOnInit() {
@@ -197,8 +190,8 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
       this.gameSessionService.getGameSession(routeId).subscribe({
         next: (data: GameSession) => {
           console.log('Game session data loaded:', data);
+          this.connectSocket();
           if (data && data.game) {
-            console.log('Game data structure:', JSON.stringify(data.game, null, 2));
             const preparedGame = this.prepareGameData(data.game);
             this.game.set(preparedGame);
             // После получения данных игры вызовем расчет высоты ячеек
@@ -214,6 +207,10 @@ export class GameBoardComponent implements OnInit, AfterViewInit {
     } else {
       console.error('No game ID provided in route');
     }
+  }
+
+  private connectSocket(): void {
+    this.socketService.connect();
   }
 
   // Подготовка данных игры - убедимся, что все необходимые свойства существуют
